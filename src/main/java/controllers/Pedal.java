@@ -10,11 +10,11 @@ import javax.ws.rs.core.MediaType;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-@Path("amp/")
+@Path("pedal/")
 @Consumes(MediaType.MULTIPART_FORM_DATA)
 @Produces(MediaType.APPLICATION_JSON)
-
 public class Pedal {
+
     @GET
     @Path("list")
     public String pedalList() {
@@ -41,9 +41,9 @@ public class Pedal {
             return "{\"Error\": \"Unable to list items. Error code xx.\"}";
         }
     }
+
     @POST
     @Path("delete/{PedalID}")
-
     public String deletePedal(@PathParam("PedalID") Integer PedalID) {
         System.out.println("Invoked deletePedal()");
         try {

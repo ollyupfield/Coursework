@@ -12,12 +12,10 @@ import java.sql.ResultSet;
 
 
 @Path("amp/")
-@Consumes(MediaType.MULTIPART_FORM_DATA)
-@Produces(MediaType.APPLICATION_JSON)
-
 public class Amp {
     @GET
     @Path("list")
+    @Produces(MediaType.APPLICATION_JSON)
     public String ampList() {
         System.out.println("Invoked Amp.ampList()");
         JSONArray response = new JSONArray();
@@ -44,7 +42,8 @@ public class Amp {
     }
         @POST
         @Path("delete/{AmpID}")
-
+        @Consumes(MediaType.MULTIPART_FORM_DATA)
+        @Produces(MediaType.APPLICATION_JSON)
         public String deleteAmp(@PathParam("AmpID") Integer AmpID) {
             System.out.println("Invoked deleteAmp()");
             try {
@@ -57,9 +56,13 @@ public class Amp {
                 return "{\"Error\": \"Unable to delete item, please see server console for more info.\"}";
             }
         }
-    @POST
+
+        @POST
     @Path("add")
-    public String ampAdd(@FormDataParam("AmpID") Integer AmpID, @FormDataParam("CollectionID") Integer CollectionID, @FormDataParam("TotalCount") Integer TotalCount, @FormDataParam("Title") String Title, @FormDataParam("Description") String Description, @FormDataParam("Model") String Model, @FormDataParam("Make") String Make, @FormDataParam("DateAdded") String DateAdded) {
+        @Consumes(MediaType.MULTIPART_FORM_DATA)
+        @Produces(MediaType.APPLICATION_JSON)
+
+        public String ampAdd(@FormDataParam("AmpID") Integer AmpID, @FormDataParam("CollectionID") Integer CollectionID, @FormDataParam("TotalCount") Integer TotalCount, @FormDataParam("Title") String Title, @FormDataParam("Description") String Description, @FormDataParam("Model") String Model, @FormDataParam("Make") String Make, @FormDataParam("DateAdded") String DateAdded) {
         System.out.println("Invoked Amp.ampAdd()");
         try {
             PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Amps (AmpID, CollectionID, TotalCount, Title, Description, Model, Make, DateAdded) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
@@ -80,6 +83,8 @@ public class Amp {
     }
     @POST
     @Path("update")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
     public String updateAmp(@FormDataParam("AmpID") Integer AmpID, @FormDataParam("CollectionID") Integer CollectionID, @FormDataParam("TotalCount") Integer TotalCount, @FormDataParam("Title") String Title, @FormDataParam("Description") String Description, @FormDataParam("Model") String Model, @FormDataParam("Make") String Make, @FormDataParam("DateAdded") String DateAdded) {
         try {
             System.out.println("Invoked Amp.updateAmp/update id=" + AmpID);
