@@ -42,7 +42,7 @@
 
                                             //clear the string
             for (let item of response) {                            //creates a table with rows for every item in JSON array and a button - how cool?  Very
-                dataHTML += "<tr><td>" + item.Title + "</td><td>" + item.Description + "</td><td> <button class='alertAmpID'  data-itemID='" + item.AmpID + "'>Click Me</button></td></tr>";
+                dataHTML += "<tr><td>" + item.Title + "</td><td>" + item.Description + "</td><td>" + item.TotalCount + "</td><td>" + item.Model + "</td><td>" + item.Make + "</td><td>" + item.DatedAddedK + "</td><td> <button class='alertAmpID'  data-itemID='" + item.AmpID + "'>Click Me</button></td></tr>";
             }
             document.getElementById("Amps").innerHTML += dataHTML;
 
@@ -66,7 +66,7 @@
 
 <body onload="pageLoad()">
 
-Welcome to the page
+Amp Collection:
 
 
 <BR>
