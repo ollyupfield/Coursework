@@ -20,18 +20,17 @@ public class Amp {
         System.out.println("Invoked Amp.ampList()");
         JSONArray response = new JSONArray();
         try {
-            PreparedStatement ps = Main.db.prepareStatement("SELECT AmpID, CollectionID, TotalCount, Title, Description, Model, Make, DateAdded FROM Amps");
+            PreparedStatement ps = Main.db.prepareStatement("SELECT AmpID, CollectionID, Title, Description, Model, Make, DateAdded FROM Amps");
             ResultSet results = ps.executeQuery();
             while (results.next() == true) {
                 JSONObject row = new JSONObject();
                 row.put("AmpID", results.getInt(1));
                 row.put("CollectionID", results.getInt(2));
-                row.put("TotalCount", results.getInt(3));
-                row.put("Title", results.getString(4));
-                row.put("Description", results.getString(5));
-                row.put("Model", results.getString(6));
-                row.put("Make", results.getString(7));
-                row.put("DateAdded", results.getString(8));
+                row.put("Title", results.getString(3));
+                row.put("Description", results.getString(4));
+                row.put("Model", results.getString(5));
+                row.put("Make", results.getString(6));
+                row.put("DateAdded", results.getString(7));
                 response.add(row);
             }
             return response.toString();
@@ -62,18 +61,16 @@ public class Amp {
         @Consumes(MediaType.MULTIPART_FORM_DATA)
         @Produces(MediaType.APPLICATION_JSON)
 
-        public String ampAdd(@FormDataParam("AmpID") Integer AmpID, @FormDataParam("CollectionID") Integer CollectionID, @FormDataParam("TotalCount") Integer TotalCount, @FormDataParam("Title") String Title, @FormDataParam("Description") String Description, @FormDataParam("Model") String Model, @FormDataParam("Make") String Make, @FormDataParam("DateAdded") String DateAdded) {
+        public String ampAdd(@FormDataParam("CollectionID") Integer CollectionID, @FormDataParam("Title") String Title, @FormDataParam("Description") String Description, @FormDataParam("Model") String Model, @FormDataParam("Make") String Make, @FormDataParam("DateAdded") String DateAdded) {
         System.out.println("Invoked Amp.ampAdd()");
         try {
-            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Amps (AmpID, CollectionID, TotalCount, Title, Description, Model, Make, DateAdded) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-            ps.setInt(1, AmpID);
-            ps.setInt(2, CollectionID);
-            ps.setInt(3, TotalCount);
-            ps.setString(4, Title);
-            ps.setString(5, Description);
-            ps.setString(6, Model);
-            ps.setString(7, Make);
-            ps.setString(8, DateAdded);
+            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Amps (CollectionID, Title, Description, Model, Make, DateAdded) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            ps.setInt(1, CollectionID);
+            ps.setString(2, Title);
+            ps.setString(3, Description);
+            ps.setString(4, Model);
+            ps.setString(5, Make);
+            ps.setString(6, DateAdded);
             ps.execute();
             return "{\"OK\": \"Added amp.\"}";
         } catch (Exception exception) {
@@ -85,18 +82,17 @@ public class Amp {
     @Path("update")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public String updateAmp(@FormDataParam("AmpID") Integer AmpID, @FormDataParam("CollectionID") Integer CollectionID, @FormDataParam("TotalCount") Integer TotalCount, @FormDataParam("Title") String Title, @FormDataParam("Description") String Description, @FormDataParam("Model") String Model, @FormDataParam("Make") String Make, @FormDataParam("DateAdded") String DateAdded) {
+    public String updateAmp(@FormDataParam("AmpID") Integer AmpID, @FormDataParam("CollectionID") Integer CollectionID, @FormDataParam("Title") String Title, @FormDataParam("Description") String Description, @FormDataParam("Model") String Model, @FormDataParam("Make") String Make, @FormDataParam("DateAdded") String DateAdded) {
         try {
             System.out.println("Invoked Amp.updateAmp/update id=" + AmpID);
-            PreparedStatement ps = Main.db.prepareStatement("UPDATE Amps SET CollectionID = ?, TotalCount = ?, Title = ?, Description = ?, Model = ?, Make = ?, DateAdded = ? WHERE AmpID = ?");
+            PreparedStatement ps = Main.db.prepareStatement("UPDATE Amps SET CollectionID = ?, Title = ?, Description = ?, Model = ?, Make = ?, DateAdded = ? WHERE AmpID = ?");
             ps.setInt(1, AmpID);
             ps.setInt(2, CollectionID);
-            ps.setInt(3, TotalCount);
-            ps.setString(4, Title);
-            ps.setString(5, Description);
-            ps.setString(6, Model);
-            ps.setString(7, Make);
-            ps.setString(8, DateAdded);
+            ps.setString(3, Title);
+            ps.setString(4, Description);
+            ps.setString(5, Model);
+            ps.setString(6, Make);
+            ps.setString(7, DateAdded);
             ps.execute();
             return "{\"OK\": \"Amp updated\"}";
         } catch (Exception exception) {

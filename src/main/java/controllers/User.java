@@ -47,13 +47,12 @@ public class User {
     }
 
 
-    public static boolean validToken(String token) {        // this method MUST be called before any data is returned to the browser
-        // token is taken from the Cookie sent back automatically with every HTTP request
+    public static boolean validToken(String token) {
         try {
             PreparedStatement ps = Main.db.prepareStatement("SELECT UserID FROM Users WHERE SessionToken = ?");
             ps.setString(1, token);
             ResultSet logoutResults = ps.executeQuery();
-            return logoutResults.next();   //logoutResults.next() will be true if there is a record in the ResultSet
+            return logoutResults.next();
         } catch (Exception exception) {
             System.out.println("Database error" + exception.getMessage());
             return false;
