@@ -33,6 +33,8 @@
                 }
             });
             }
+
+
             function formatAmps(response){
 
 
@@ -41,18 +43,11 @@
 
                                             //clear the string
             for (let item of response) {                            //creates a table with rows for every item in JSON array and a button - how cool?  Very
-                dataHTML += "<tr><td>" + item.Title + "</td><td>" + item.Description + item.Model + "</td><td>" + item.Make + "</td><td>" + item.DateAdded + "</td><td> <button class='alertAmpID'  data-itemID='" + item.AmpID + "'>Click Me</button></td></tr>";
+                dataHTML += "<tr><td>" + item.Title + "</td><td>" + item.Description + item.Model + "</td><td>" + item.Make + "</td><td>" + item.DateAdded;
             }
             document.getElementById("Amps").innerHTML += dataHTML;
-
-            document.addEventListener("click", function (event) {
-                if (event.target.matches('.alertAmpID')) {                      //alertItemName is the class we gave all the button elements
-                    var itemID = event.target.getAttribute("data-itemID");        //data-itemID is an attribute we gave the button
-                    alert("You clicked on " + itemID);
-                }
-            });
-
         }
+
 
 
 
@@ -65,11 +60,14 @@
 
 <body onload="pageLoad()">
 
-Amp Collection:
+<h1 style="font-size:300%;">Amp Collection:</h1>
 
 
+
+<h1 style="font-size:150%;">My Amps</h1>
+
 <BR>
-<BR>
+
 <table id="Amps"></table>
 
 

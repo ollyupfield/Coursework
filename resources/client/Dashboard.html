@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+
+    <style>
+        table {
+            border-collapse: collapse;
+            border: 1px solid black;
+        }
+    </style>
+
+    <style>
+        .navigateAmps {
+            border-collapse: collapse;
+            border: 3px solid black;
+        }
+    </style>
+
+    <style>
+        .navigateGuitars {
+            border-collapse: collapse;
+            border: 3px solid black;
+        }
+    </style>
+
+    <style>
+        .navigatePedals {
+            border-collapse: collapse;
+            border: 3px solid black;
+        }
+    </style>
+
+    <title>Collections</title>
+
+    <script>
+
+        "use strict";
+
+        function pageLoad() {                                       	// use this method to run code when you page has loaded eg check user is logged in, add data to a table
+            console.log("Invoked pageLoad() ");                         //  your BFF for debugging!!! Don't use alerts as you'll have to remove all of them in final version
+
+            const url = "/collection/list/";	// API method on webserver will be in Weight class with @Path of list
+
+            fetch(url, {
+                method: "GET",
+            }).then(response => {
+                return response.json();                 //return response to JSON
+        }).then(response => {
+                if (response.hasOwnProperty("Error")) { //checks if response from server has a key "Error"
+                alert(JSON.stringify(response));    // if it does, convert JSON object to string and alert
+            } else {
+                formatCollections(response);          //this function will create an HTML table of the data
+            }
+        });
+        }
+        function formatCollections(response){
+
+
+            let dataHTML = "";
+
+
+            //clear the string
+            for (let item of response) {                            //creates a table with rows for every item in JSON array and a button - how cool?  Very
+                dataHTML += "<tr><td>" + item.CollectionTitle + "</td><td>" + item.CollectionColour;
+            }
+            document.getElementById("Collections").innerHTML += dataHTML;
+
+            document.addEventListener("click", function (event) {
+                if (event.target.matches('.navigateAmps')) {                      //alertItemName is the class we gave all the button elements//data-itemID is an attribute we gave the button
+                    window.open("viewAmps.html", "_self");
+                }
+                if (event.target.matches('.navigateGuitars')) {                      //alertItemName is the class we gave all the button elements//data-itemID is an attribute we gave the button
+                    window.open("viewGuitars.html", "_self");
+                }
+                if (event.target.matches('.navigatePedals')) {                      //alertItemName is the class we gave all the button elements//data-itemID is an attribute we gave the button
+                    window.open("viewPedals.html", "_self");
+                }
+            });
+        }
+
+    </script>
+
+
+</head>
+
+<body>
+
+<body onload="pageLoad()">
+
+<h1 style="font-size:300%;">Dashboard:</h1>
+<BR>
+
+<table id="Collections"></table>
+
+<BR>
+
+<button class='navigateAmps'>ViewAmps</button>
+<button class='navigateGuitars'>ViewGuitars</button>
+<button class='navigatePedals'>ViewPedals</button>
+
+</body>
+
+</html>

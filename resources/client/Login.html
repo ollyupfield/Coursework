@@ -17,25 +17,34 @@
                 body: formData,
             }).then(response => {
                 return response.json();                 //now return that promise to JSON
-            }).then(response => {
+        }).then(response => {
                 if (response.hasOwnProperty("Error")) {
-                    alert(JSON.stringify(response));        // if it does, convert JSON object to string and alert
-                } else {
-                    Cookies.set("token", response.SessionToken);
-                    Cookies.set("email", response.Email);
-                    window.open("index.html", "_self");       //open index.html in same tab
-                }
-            });
+                alert(JSON.stringify(response));        // if it does, convert JSON object to string and alert
+            } else {
+                Cookies.set("token", response.SessionToken);
+                Cookies.set("email", response.Email);
+                window.open("Dashboard.html", "_self");       //open index.html in same tab
+            }
+        });
         }
     </script>
+
 
 </head>
 <body>
 
+<h1 style="font-size:300%;">Login:</h1>
+
+
 <form id="loginForm">
-    <input type="text" name="email" id="email">
-    <input type="password" name="password" id="password">
+    <label for="email">Email:</label><BR>
+    <input type="text" name="email" id="email"><BR>
+    <label for="password">Password:</label><BR>
+    <input type="password" name="password" id="password"><BR>
 </form>
+
+<BR>
+
 <button class="button" onclick='postUserLogin();'>LOGIN</button>
 
 </body>
