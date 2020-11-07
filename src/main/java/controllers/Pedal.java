@@ -14,6 +14,46 @@ import java.sql.ResultSet;
 @Consumes(MediaType.MULTIPART_FORM_DATA)
 @Produces(MediaType.APPLICATION_JSON)
 public class Pedal {
+    @GET
+    @Path("latest")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String pedalLatest() {
+        System.out.println("Invoked Pedal.pedalLatest()");
+        JSONArray response = new JSONArray();
+        try {
+            PreparedStatement ps = Main.db.prepareStatement("SELECT Title FROM Pedals ORDER BY PedalID DESC LIMIT 1;");
+            ResultSet results = ps.executeQuery();
+            while (results.next() == true) {
+                JSONObject row = new JSONObject();
+                row.put("Title", results.getString(1));
+                response.add(row);
+            }
+            return response.toString();
+        } catch (Exception exception) {
+            System.out.println("Database error: " + exception.getMessage());
+            return "{\"Error\": \"Unable to list latest. Error code xx.\"}";
+        }
+    }
+
+    @GET
+    @Path("total")
+    public String pedalTotal() {
+        System.out.println("Invoked Pedal.pedalTotal()");
+        JSONArray response = new JSONArray();
+        try {
+            PreparedStatement ps = Main.db.prepareStatement("SELECT COUNT(PedalID) AS TotalPedals FROM Pedals");
+            ResultSet results = ps.executeQuery();
+            while (results.next() == true) {
+                JSONObject row = new JSONObject();
+                row.put("TotalPedals", results.getInt(1));
+                response.add(row);
+            }
+            return response.toString();
+        } catch (Exception exception) {
+            System.out.println("Database error: " + exception.getMessage());
+            return "{\"Error\": \"Unable to list total. Error code xx.\"}";
+        }
+    }
 
     @GET
     @Path("list")

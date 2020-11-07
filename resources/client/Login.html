@@ -33,19 +33,74 @@
 </head>
 <body>
 
-<h1 style="font-size:300%;">Login:</h1>
+<h1 style="font-size:300%;text-align:center;text-decoration-line: underline">Login:</h1>
 
-
-<form id="loginForm">
+<form class="loginForm">
+    <label for="email"style="font-size:100%;text-align:center;text-decoration-line: underline">Existing Users:</label><BR>
+    <BR>
     <label for="email">Email:</label><BR>
     <input type="text" name="email" id="email"><BR>
     <label for="password">Password:</label><BR>
     <input type="password" name="password" id="password"><BR>
 </form>
 
+<form class="signupForm">
+    <label for="email"style="font-size:100%;text-align:center;text-decoration-line: underline">New Users:</label><BR>
+    <BR>
+    <label for="email">Email:</label><BR>
+    <input type="text" name="email" id="email"><BR>
+    <label for="password">Password:</label><BR>
+    <input type="password" name="password" id="password"><BR>
+    <label for="confirmPassword">Confirm Password:</label><BR>
+    <input type="confirmPassword" name="confirmPassword" id="confirmPassword"><BR>
+</form>
+
 <BR>
 
-<button class="button" onclick='postUserLogin();'>LOGIN</button>
+<button class="login" onclick='postUserLogin();'>LOGIN</button>
+
+<BR>
+
+<button class="signup" onclick='postUserLogin();'>SIGN UP</button>
+
+<style>
+    .login {
+        font-size: 20px;
+        border-collapse: collapse;
+        border: 3px solid black;
+        position: relative;
+        left: 735px;
+    }
+</style>
+
+<style>
+    .signup {
+        font-size: 20px;
+        border-collapse: collapse;
+        border: 3px solid black;
+        position: relative;
+        left: 1075px;
+        top: -30px;
+    }
+</style>
+
+<style>
+    .signupForm {
+        position: relative;
+        left: 1050px;
+        top: -25px;
+        font-size: 20px;
+    }
+</style>
+
+<style>
+    .loginForm {
+        position: relative;
+        left: 700px;
+        top: 165px;
+        font-size: 20px;
+    }
+</style>
 
 </body>
 </html>

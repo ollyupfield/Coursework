@@ -2,15 +2,74 @@
 <html lang='en'>
 
 <head>
-
     <style>
         table {
+            font-size: 20px;
             border-collapse: collapse;
             border: 1px solid black;
+            text-align:center;
+            margin-left: auto;
+            margin-right: auto;
         }
     </style>
 
-    <title>Amps</title>
+    <style>
+        .addAmp {
+            font-size: 20px;
+            border-collapse: collapse;
+            border: 3px solid black;
+            margin: auto;
+            display: block;
+        }
+    </style>
+
+    <title>Amp Collection</title>
+
+<body>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .topnav {
+        overflow: hidden;
+        background-color: #333;
+    }
+
+    .topnav a {
+        float: left;
+        color: #f2f2f2;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+        font-size: 17px;
+    }
+
+    .topnav a:hover {
+        background-color: #ddd;
+        color: black;
+    }
+
+    .topnav a.active {
+        background-color: #1859b7;
+        color: white;
+    }
+</style>
+</head>
+<body>
+
+<div class="topnav">
+    <a href="Dashboard.html">Dashboard</a>
+    <a class="active" href="viewAmps.html">Amps</a>
+    <a href="viewGuitars.html">Guitars</a>
+    <a href="viewPedals.html">Pedals</a>
+    <a style="position: relative; left: 1475px" href="Login.html">Logout</a>
+</div>
+
+</body>
 
     <script>
 
@@ -19,40 +78,53 @@
         function pageLoad() {                                       	// use this method to run code when you page has loaded eg check user is logged in, add data to a table
             console.log("Invoked pageLoad() ");                         //  your BFF for debugging!!! Don't use alerts as you'll have to remove all of them in final version
 
-                const url = "/amp/list/";	// API method on webserver will be in Weight class with @Path of list
+            const url = "/amp/list/";	// API method on webserver will be in Weight class with @Path of list
 
-                fetch(url, {
-                    method: "GET",
-                }).then(response => {
-                    return response.json();                 //return response to JSON
-                }).then(response => {
-                    if (response.hasOwnProperty("Error")) { //checks if response from server has a key "Error"
+            fetch(url, {
+                method: "GET",
+            }).then(response => {
+                return response.json();                 //return response to JSON
+            }).then(response => {
+                if (response.hasOwnProperty("Error")) { //checks if response from server has a key "Error"
                     alert(JSON.stringify(response));    // if it does, convert JSON object to string and alert
                 } else {
                     formatAmps(response);          //this function will create an HTML table of the data
                 }
             });
-            }
-
-
-            function formatAmps(response){
-
-
-            let dataHTML = "";
-
-
-                                            //clear the string
-            for (let item of response) {                            //creates a table with rows for every item in JSON array and a button - how cool?  Very
-                dataHTML += "<tr><td>" + item.Title + "</td><td>" + item.Description + item.Model + "</td><td>" + item.Make + "</td><td>" + item.DateAdded;
-            }
-            document.getElementById("Amps").innerHTML += dataHTML;
         }
 
 
+        function formatAmps(response){
 
+            let dataHTML = ""; //clear the string
+
+            for (let item of response) {
+                dataHTML += "<tr><td>" + item.Title + "</td><td>" + "</td><td>" + item.Description + "</td><td>" + "</td><td>" + item.Model + "</td><td>" + item.Make + "</td><td>" + "</td><td>" + item.DateAdded + "</td><td> <button class='editAmp'  data-itemID='" + item.AmpID + "'>Edit</button></td>" + "</td><td> <button class='deleteAmp'  data-itemID='" + item.AmpID + "'>Delete</button></td>";
+            }
+            document.getElementById("Amps").innerHTML += dataHTML;
+
+            document.addEventListener("click", function (event) {
+                if (event.target.matches('.editAmp')) {                      //alertItemName is the class we gave all the button elements
+                    var itemID = event.target.getAttribute("data-itemID");        //data-itemID is an attribute we gave the button
+                    alert("You clicked on " + itemID);
+                }
+            });
+
+            document.addEventListener("click", function (event) {
+                if (event.target.matches('.deleteAmp')) {                      //alertItemName is the class we gave all the button elements
+                    var itemID = event.target.getAttribute("data-itemID");        //data-itemID is an attribute we gave the button
+                    alert("You clicked on " + itemID);
+                }
+            });
+        }
+
+        document.addEventListener("click", function (event) {
+            if (event.target.matches('.addAmp')) {
+                window.open("editAmps.html", "_self");//alertItemName is the class we gave all the button elements//data-itemID is an attribute we gave the button
+            }
+        });
 
     </script>
-
 
 </head>
 
@@ -60,16 +132,17 @@
 
 <body onload="pageLoad()">
 
-<h1 style="font-size:300%;">Amp Collection:</h1>
-
-
-
-<h1 style="font-size:150%;">My Amps</h1>
+<h1 style="text-align:center;font-size:300%;text-decoration-line: underline">Amp Collection:</h1>
 
 <BR>
 
+<h1 style="text-align:center;font-size:200%;text-decoration-line: underline">My Amps:</h1>
+
 <table id="Amps"></table>
 
+<BR>
+
+<button class='addAmp'>Add an Amp</button>
 
 </body>
 

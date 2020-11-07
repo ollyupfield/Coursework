@@ -16,6 +16,46 @@ import java.sql.ResultSet;
 
 public class Guitar {
     @GET
+    @Path("latest")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String guitarLatest() {
+        System.out.println("Invoked Guitar.guitarLatest()");
+        JSONArray response = new JSONArray();
+        try {
+            PreparedStatement ps = Main.db.prepareStatement("SELECT Title FROM Guitars ORDER BY GuitarID DESC LIMIT 1;");
+            ResultSet results = ps.executeQuery();
+            while (results.next() == true) {
+                JSONObject row = new JSONObject();
+                row.put("Title", results.getString(1));
+                response.add(row);
+            }
+            return response.toString();
+        } catch (Exception exception) {
+            System.out.println("Database error: " + exception.getMessage());
+            return "{\"Error\": \"Unable to list latest. Error code xx.\"}";
+        }
+    }
+    @GET
+    @Path("total")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String guitarTotal() {
+        System.out.println("Invoked Guitar.guitarTotal()");
+        JSONArray response = new JSONArray();
+        try {
+            PreparedStatement ps = Main.db.prepareStatement("SELECT COUNT(GuitarID) AS TotalGuitars FROM Guitars");
+            ResultSet results = ps.executeQuery();
+            while (results.next() == true) {
+                JSONObject row = new JSONObject();
+                row.put("TotalGuitars", results.getInt(1));
+                response.add(row);
+            }
+            return response.toString();
+        } catch (Exception exception) {
+            System.out.println("Database error: " + exception.getMessage());
+            return "{\"Error\": \"Unable to list total. Error code xx.\"}";
+        }
+    }
+    @GET
     @Path("list")
     public String guitarList() {
         System.out.println("Invoked Guitar.guitarList()");

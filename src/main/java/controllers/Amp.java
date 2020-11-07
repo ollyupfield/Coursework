@@ -14,6 +14,46 @@ import java.sql.ResultSet;
 @Path("amp/")
 public class Amp {
     @GET
+    @Path("total")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String ampTotal() {
+        System.out.println("Invoked Amp.ampTotal()");
+        JSONArray response = new JSONArray();
+        try {
+            PreparedStatement ps = Main.db.prepareStatement("SELECT COUNT(AmpID) AS TotalAmps FROM Amps");
+            ResultSet results = ps.executeQuery();
+            while (results.next() == true) {
+                JSONObject row = new JSONObject();
+                row.put("TotalAmps", results.getInt(1));
+                response.add(row);
+            }
+            return response.toString();
+        } catch (Exception exception) {
+            System.out.println("Database error: " + exception.getMessage());
+            return "{\"Error\": \"Unable to list total. Error code xx.\"}";
+        }
+    }
+    @GET
+    @Path("latest")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String ampLatest() {
+        System.out.println("Invoked Amp.ampLatest()");
+        JSONArray response = new JSONArray();
+        try {
+            PreparedStatement ps = Main.db.prepareStatement("SELECT Title FROM Amps ORDER BY AmpID DESC LIMIT 1;");
+            ResultSet results = ps.executeQuery();
+            while (results.next() == true) {
+                JSONObject row = new JSONObject();
+                row.put("Title", results.getString(1));
+                response.add(row);
+            }
+            return response.toString();
+        } catch (Exception exception) {
+            System.out.println("Database error: " + exception.getMessage());
+            return "{\"Error\": \"Unable to list latest. Error code xx.\"}";
+        }
+    }
+    @GET
     @Path("list")
     @Produces(MediaType.APPLICATION_JSON)
     public String ampList() {
@@ -61,16 +101,17 @@ public class Amp {
         @Consumes(MediaType.MULTIPART_FORM_DATA)
         @Produces(MediaType.APPLICATION_JSON)
 
-        public String ampAdd(@FormDataParam("CollectionID") Integer CollectionID, @FormDataParam("Title") String Title, @FormDataParam("Description") String Description, @FormDataParam("Model") String Model, @FormDataParam("Make") String Make, @FormDataParam("DateAdded") String DateAdded) {
+        public String ampAdd(@FormDataParam("AmpID") Integer AmpID, @FormDataParam("CollectionID") Integer CollectionID, @FormDataParam("Title") String Title, @FormDataParam("Description") String Description, @FormDataParam("Model") String Model, @FormDataParam("Make") String Make, @FormDataParam("DateAdded") String DateAdded) {
         System.out.println("Invoked Amp.ampAdd()");
         try {
-            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Amps (CollectionID, Title, Description, Model, Make, DateAdded) VALUES (?, ?, ?, ?, ?, ?, ?)");
-            ps.setInt(1, CollectionID);
-            ps.setString(2, Title);
-            ps.setString(3, Description);
-            ps.setString(4, Model);
-            ps.setString(5, Make);
-            ps.setString(6, DateAdded);
+            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Amps (AmpID, CollectionID, Title, Description, Model, Make, DateAdded) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            ps.setInt(1, AmpID);
+            ps.setInt(2, CollectionID);
+            ps.setString(3, Title);
+            ps.setString(4, Description);
+            ps.setString(5, Model);
+            ps.setString(6, Make);
+            ps.setString(7, DateAdded);
             ps.execute();
             return "{\"OK\": \"Added amp.\"}";
         } catch (Exception exception) {

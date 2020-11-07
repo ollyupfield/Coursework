@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+
+    <title>Add an Amp</title>
+
+    <script>
+
+        "use strict";
+        document.addEventListener("click", function (event) {
+            if (event.target.matches('.addAmp')) {                      //alertItemName is the class we gave all the button elements//data-itemID is an attribute we gave the button
+                console.log("Invoked postAmpAdd()");
+
+                const formData = new FormData(document.getElementById('ampAddForm'));
+                var url = "/amp/add";
+
+                fetch(url, {
+                    method: "POST",
+                    body: formData,
+                }).then(response => {
+                    return response.json()
+                }).then(response => {
+                    if (response.hasOwnProperty("Error")) {   //checks if response from server has a key "Error"
+                        alert(JSON.stringify(response));        // if it does, convert JSON object to string and alert
+                    } else {
+                        return "{\"Error\": \"Amp Added.\"}";
+                    }
+                });
+
+            }
+        });
+
+    </script>
+
+</head>
+
+<body>
+
+<body onload="pageLoad()">
+
+<h1 style="text-align:center;font-size:300%;text-decoration-line: underline">Add an Amp:</h1>
+
+<form id="ampAddForm">
+    <label for="AmpID">AmpID:</label><BR>
+    <input type="text" name="AmpID" id="AmpID"><BR>
+    <label for="CollectionID">CollectionID:</label><BR>
+    <input type="text" name="CollectionID" id="CollectionID"><BR>
+    <label for="Title">Title:</label><BR>
+    <input type="text" name="Title" id="Title"><BR>
+    <label for="Description">Description:</label><BR>
+    <input type="text" name="Description" id="Description"><BR>
+    <label for="Model">Model:</label><BR>
+    <input type="text" name="Model" id="Model"><BR>
+    <label for="Make">Make:</label><BR>
+    <input type="text" name="Make" id="Make"><BR>
+    <label for="DateAdded">Date Added:</label><BR>
+    <input type="text" name="DateAdded" id="DateAdded"><BR>
+</form>
+
+<style>
+    form {
+        text-align: center;
+        font-size: 20px;
+    }
+</style>
+
+<style>
+    .addAmp {
+        font-size: 20px;
+        border-collapse: collapse;
+        border: 3px solid black;
+        margin: auto;
+        display: block;
+    }
+</style>
+
+<BR>
+
+<button class='addAmp'>Add Amp</button>
+
+</body>
+
+</html>
