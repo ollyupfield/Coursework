@@ -61,7 +61,7 @@ public class Pedal {
         System.out.println("Invoked Pedal.pedalList()");
         JSONArray response = new JSONArray();
         try {
-            PreparedStatement ps = Main.db.prepareStatement("SELECT PedalID, CollectionID, Title, Description, Model, Make, DateAdded FROM Pedals");
+            PreparedStatement ps = Main.db.prepareStatement("SELECT PedalID, CollectionID, Title, Description, Model, DateAdded FROM Pedals");
             ResultSet results = ps.executeQuery();
             while (results.next() == true) {
                 JSONObject row = new JSONObject();
@@ -70,8 +70,7 @@ public class Pedal {
                 row.put("Title", results.getString(3));
                 row.put("Description", results.getString(4));
                 row.put("Model", results.getString(5));
-                row.put("Make", results.getString(6));
-                row.put("DateAdded", results.getString(7));
+                row.put("DateAdded", results.getString(6));
                 response.add(row);
             }
             return response.toString();
@@ -97,16 +96,15 @@ public class Pedal {
     }
     @POST
     @Path("add")
-    public String ampAdd(@FormDataParam("CollectionID") Integer CollectionID, @FormDataParam("Title") String Title, @FormDataParam("Description") String Description, @FormDataParam("Model") String Model, @FormDataParam("Make") String Make, @FormDataParam("DateAdded") String DateAdded) {
+    public String ampAdd(@FormDataParam("CollectionID") Integer CollectionID, @FormDataParam("Title") String Title, @FormDataParam("Description") String Description, @FormDataParam("Model") String Model, @FormDataParam("DateAdded") String DateAdded) {
         System.out.println("Invoked Pedal.pedalAdd()");
         try {
-            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Pedals (CollectionID, Title, Description, Model, Make, DateAdded) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Pedals (CollectionID, Title, Description, Model, DateAdded) VALUES (?, ?, ?, ?, ?, ?)");
             ps.setInt(1, CollectionID);
             ps.setString(2, Title);
             ps.setString(3, Description);
             ps.setString(4, Model);
-            ps.setString(5, Make);
-            ps.setString(6, DateAdded);
+            ps.setString(5, DateAdded);
             ps.execute();
             return "{\"OK\": \"Added pedal.\"}";
         } catch (Exception exception) {
@@ -116,17 +114,16 @@ public class Pedal {
     }
     @POST
     @Path("update")
-    public String updatePedal(@FormDataParam("PedalID") Integer PedalID, @FormDataParam("CollectionID") Integer CollectionID, @FormDataParam("Title") String Title, @FormDataParam("Description") String Description, @FormDataParam("Model") String Model, @FormDataParam("Make") String Make, @FormDataParam("DateAdded") String DateAdded) {
+    public String updatePedal(@FormDataParam("PedalID") Integer PedalID, @FormDataParam("CollectionID") Integer CollectionID, @FormDataParam("Title") String Title, @FormDataParam("Description") String Description, @FormDataParam("Model") String Model, @FormDataParam("DateAdded") String DateAdded) {
         try {
             System.out.println("Invoked Pedal.updatePedal/update id=" + PedalID);
-            PreparedStatement ps = Main.db.prepareStatement("UPDATE Pedals SET CollectionID = ?, Title = ?, Description = ?, Model = ?, Make = ?, DateAdded = ? WHERE PedalID = ?");
+            PreparedStatement ps = Main.db.prepareStatement("UPDATE Pedals SET CollectionID = ?, Title = ?, Description = ?, Model = ?, DateAdded = ? WHERE PedalID = ?");
             ps.setInt(1, PedalID);
             ps.setInt(2, CollectionID);
             ps.setString(3, Title);
             ps.setString(4, Description);
             ps.setString(5, Model);
-            ps.setString(6, Make);
-            ps.setString(7, DateAdded);
+            ps.setString(6, DateAdded);
             ps.execute();
             return "{\"OK\": \"Pedal updated\"}";
         } catch (Exception exception) {
