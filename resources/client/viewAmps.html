@@ -6,20 +6,46 @@
         table {
             font-size: 20px;
             border-collapse: collapse;
-            border: 1px solid black;
+            border: 2px solid black;
             text-align:center;
             margin-left: auto;
             margin-right: auto;
+            position: relative;
+            top: 30px;
+        }
+        th, td {
+            border-right: 2px solid #000000;
+            padding: 8px;
+        }
+        tr:nth-child(even) {
+            background-color: #d2d2d2;
         }
     </style>
 
     <style>
         .addAmp {
             font-size: 20px;
+            background-color: #1859b7;
+            color: white;
             border-collapse: collapse;
-            border: 3px solid black;
-            margin: auto;
-            display: block;
+            border: 3px solid #001a67;
+            position: relative;
+            left: 895px;
+            top: 60px;
+        }
+        .editAmp {
+            font-size: 20px;
+            background-color: #1859b7;
+            color: white;
+            border-collapse: collapse;
+            border: 3px solid #001a67;
+        }
+        .deleteAmp {
+            font-size: 20px;
+            background-color: #1859b7;
+            color: white;
+            border-collapse: collapse;
+            border: 3px solid #001a67;
         }
     </style>
 
@@ -75,8 +101,8 @@
 
         "use strict";
 
-        function pageLoad() {                                       	// use this method to run code when you page has loaded eg check user is logged in, add data to a table
-            console.log("Invoked pageLoad() ");                         //  your BFF for debugging!!! Don't use alerts as you'll have to remove all of them in final version
+        function viewAmps() {                                       	// use this method to run code when you page has loaded eg check user is logged in, add data to a table
+            console.log("Invoked viewAmps() ");                         //  your BFF for debugging!!! Don't use alerts as you'll have to remove all of them in final version
 
             const url = "/amp/list/";	// API method on webserver will be in Weight class with @Path of list
 
@@ -88,18 +114,17 @@
                 if (response.hasOwnProperty("Error")) { //checks if response from server has a key "Error"
                     alert(JSON.stringify(response));    // if it does, convert JSON object to string and alert
                 } else {
-                    formatAmps(response);          //this function will create an HTML table of the data
+                    formatViewAmps(response);          //this function will create an HTML table of the data
                 }
             });
         }
 
-
-        function formatAmps(response){
+        function formatViewAmps(response){
 
             let dataHTML = ""; //clear the string
 
             for (let item of response) {
-                dataHTML += "<tr><td>" + item.Title + "</td><td>" + "</td><td>" + item.Description + "</td><td>" + "</td><td>" + item.Model + "</td><td>" + item.Make + "</td><td>" + "</td><td>" + item.DateAdded + "</td><td> <button class='editAmp'  data-itemID='" + item.AmpID + "'>Edit</button></td>" + "</td><td> <button class='deleteAmp'  data-itemID='" + item.AmpID + "'>Delete</button></td>";
+                dataHTML += "<tr><td>" + item.Title + "</td><td>" + item.Description + "</td><td>" + item.Model + "</td><td>" + item.Value + "</td><td>" + item.DateAdded + "</td>" + "<td> <button class='editAmp'  data-itemID='" + item.AmpID + "'>Edit</button></td>" + "<td> <button class='deleteAmp'  data-itemID='" + item.AmpID + "'>Delete</button></td></tr>";
             }
             document.getElementById("Amps").innerHTML += dataHTML;
 
@@ -130,13 +155,15 @@
 
 <body>
 
-<body onload="pageLoad()">
+<body onload="viewAmps()">
 
 <h1 style="text-align:center;font-size:300%;text-decoration-line: underline">Amp Collection:</h1>
 
 <BR>
 
 <h1 style="text-align:center;font-size:200%;text-decoration-line: underline">My Amps:</h1>
+
+<h1 style="text-align:center;font-size:20px;position: relative; top: 40px;left: -50px;">Name &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Description&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Model&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&pound; Value Date Added</h1>
 
 <table id="Amps"></table>
 
