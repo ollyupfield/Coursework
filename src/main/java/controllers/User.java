@@ -4,9 +4,8 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.json.simple.JSONObject;
 import server.Main;
 
-import javax.ws.rs.CookieParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.UUID;
@@ -43,6 +42,26 @@ public class User {
         } catch (Exception exception) {
             System.out.println("Database error during /user/login: " + exception.getMessage());
             return "{\"Error\": \"Server side error!\"}";
+        }
+    }
+
+    @POST
+    @Path("signup")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+
+    public String signup(@FormDataParam("signupEmail") String Email, @FormDataParam("signupPassword") String Password, @FormDataParam("Name") String Name) {
+        System.out.println("Invoked User.signup()");
+        try {
+            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Users (Email, Password, Name) VALUES (?, ?, ?)");
+            ps.setString(1, Email);
+            ps.setString(2, Password);
+            ps.setString(3, Name);
+            ps.execute();
+            return "{\"OK\": \"Added User.\"}";
+        } catch (Exception exception) {
+            System.out.println("Database error: " + exception.getMessage());
+            return "{\"Error\": \"Unable to create new user, please see server console for more info.\"}";
         }
     }
 

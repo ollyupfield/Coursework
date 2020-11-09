@@ -29,6 +29,33 @@
         }
     </script>
 
+    <script>
+
+        "use strict";
+        document.addEventListener("click", function (event) {
+            if (event.target.matches('.signup')) {                      //alertItemName is the class we gave all the button elements//data-itemID is an attribute we gave the button
+                console.log("Invoked signup");
+
+                const formData = new FormData(document.getElementById('signupForm'));
+                var url = "/user/signup";
+
+                fetch(url, {
+                    method: "POST",
+                    body: formData,
+                }).then(response => {
+                    return response.json()
+                }).then(response => {
+                    if (response.hasOwnProperty("Error")) {   //checks if response from server has a key "Error"
+                        alert(JSON.stringify(response));        // if it does, convert JSON object to string and alert
+                    } else {
+                        alert("User Added");
+                        window.open("/client/Login.html", "_self");
+                    }
+                });
+            }
+        });
+
+    </script>
 
 </head>
 <body>
@@ -42,7 +69,7 @@
 <h1 style="font-size:300%;text-align:center;text-decoration-line: underline;position: relative;top: 60px">Login:</h1>
 
 <form class="loginForm">
-    <label for="email"style="font-size:120%;text-align:center;text-decoration-line: underline">Existing Users:</label><BR>
+    <label for="email" style="font-size:120%;text-align:center;text-decoration-line: underline">Existing Users:</label><BR>
     <BR>
     <label for="email">Email:</label><BR>
     <input type="text" name="email" id="email"><BR>
@@ -50,15 +77,15 @@
     <input type="password" name="password" id="password"><BR>
 </form>
 
-<form class="signupForm">
-    <label for="email"style="font-size:120%;text-align:center;text-decoration-line: underline;position: relative; left: 12px">New Users:</label><BR>
+<form id="signupForm">
+    <label for="signupEmail" style="font-size:120%;text-align:center;text-decoration-line: underline;position: relative; left: 12px">New Users:</label><BR>
     <BR>
-    <label for="email">Email:</label><BR>
-    <input type="text" name="email" id="email"><BR>
-    <label for="password">Password:</label><BR>
-    <input type="password" name="password" id="password"><BR>
-    <label for="confirmPassword">Confirm Password:</label><BR>
-    <input type="confirmPassword" name="confirmPassword" id="confirmPassword"><BR>
+    <label for="signupEmail">Email:</label><BR>
+    <input type="text" name="signupEmail" id="signupEmail"><BR>
+    <label for="signupPassword">Password:</label><BR>
+    <input type="password" name="signupPassword" id="signupPassword"><BR>
+    <label for="Name">Name:</label><BR>
+    <input type="text" name="Name" id="Name"><BR>
 </form>
 
 <BR>
@@ -67,7 +94,7 @@
 
 <BR>
 
-<button class="signup" onclick='postUserLogin();'>SIGN UP</button>
+<button class='signup'>SIGN UP</button>
 
 <style>
     .login {
@@ -79,9 +106,6 @@
         position: relative;
         left: 755px;
     }
-</style>
-
-<style>
     .signup {
         font-size: 20px;
         background-color: #1859b7;
@@ -92,18 +116,12 @@
         left: 1075px;
         top: -32px;
     }
-</style>
-
-<style>
-    .signupForm {
+    #signupForm {
         position: relative;
         left: 1050px;
         top: -25px;
         font-size: 20px;
     }
-</style>
-
-<style>
     .loginForm {
         position: relative;
         left: 720px;
