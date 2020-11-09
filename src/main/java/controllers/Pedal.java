@@ -80,17 +80,16 @@ public class Pedal {
         System.out.println("Invoked Pedal.pedalList()");
         JSONArray response = new JSONArray();
         try {
-            PreparedStatement ps = Main.db.prepareStatement("SELECT PedalID, CollectionID, Title, Description, Model, Value, DateAdded FROM Pedals");
+            PreparedStatement ps = Main.db.prepareStatement("SELECT PedalID, Title, Description, Model, Value, DateAdded FROM Pedals");
             ResultSet results = ps.executeQuery();
             while (results.next() == true) {
                 JSONObject row = new JSONObject();
                 row.put("PedalID", results.getInt(1));
-                row.put("CollectionID", results.getInt(2));
-                row.put("Title", results.getString(3));
-                row.put("Description", results.getString(4));
-                row.put("Model", results.getString(5));
-                row.put("Value", results.getInt(6));
-                row.put("DateAdded", results.getString(7));
+                row.put("Title", results.getString(2));
+                row.put("Description", results.getString(3));
+                row.put("Model", results.getString(4));
+                row.put("Value", results.getInt(5));
+                row.put("DateAdded", results.getString(6));
                 response.add(row);
             }
             return response.toString();
@@ -116,16 +115,15 @@ public class Pedal {
     }
     @POST
     @Path("add")
-    public String ampAdd(@FormDataParam("CollectionID") Integer CollectionID, @FormDataParam("Title") String Title, @FormDataParam("Description") String Description, @FormDataParam("Model") String Model, @FormDataParam("Value") Integer Value, @FormDataParam("DateAdded") String DateAdded) {
+    public String ampAdd(@FormDataParam("Title") String Title, @FormDataParam("Description") String Description, @FormDataParam("Model") String Model, @FormDataParam("Value") Integer Value, @FormDataParam("DateAdded") String DateAdded) {
         System.out.println("Invoked Pedal.pedalAdd()");
         try {
-            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Pedals (CollectionID, Title, Description, Model, Value, DateAdded) VALUES (?, ?, ?, ?, ?, ?, ?)");
-            ps.setInt(1, CollectionID);
-            ps.setString(2, Title);
-            ps.setString(3, Description);
-            ps.setString(4, Model);
-            ps.setInt(5, Value);
-            ps.setString(6, DateAdded);
+            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Pedals (Title, Description, Model, Value, DateAdded) VALUES (?, ?, ?, ?, ?, ?)");
+            ps.setString(1, Title);
+            ps.setString(2, Description);
+            ps.setString(3, Model);
+            ps.setInt(4, Value);
+            ps.setString(5, DateAdded);
             ps.execute();
             return "{\"OK\": \"Added pedal.\"}";
         } catch (Exception exception) {
@@ -135,17 +133,16 @@ public class Pedal {
     }
     @POST
     @Path("update")
-    public String updatePedal(@FormDataParam("PedalID") Integer PedalID, @FormDataParam("CollectionID") Integer CollectionID, @FormDataParam("Title") String Title, @FormDataParam("Description") String Description, @FormDataParam("Model") String Model, @FormDataParam("Value") Integer Value, @FormDataParam("DateAdded") String DateAdded) {
+    public String updatePedal(@FormDataParam("PedalID") Integer PedalID, @FormDataParam("Title") String Title, @FormDataParam("Description") String Description, @FormDataParam("Model") String Model, @FormDataParam("Value") Integer Value, @FormDataParam("DateAdded") String DateAdded) {
         try {
             System.out.println("Invoked Pedal.updatePedal/update id=" + PedalID);
-            PreparedStatement ps = Main.db.prepareStatement("UPDATE Pedals SET CollectionID = ?, Title = ?, Description = ?, Model = ?, Value = ?, DateAdded = ? WHERE PedalID = ?");
+            PreparedStatement ps = Main.db.prepareStatement("UPDATE Pedals SET Title = ?, Description = ?, Model = ?, Value = ?, DateAdded = ? WHERE PedalID = ?");
             ps.setInt(1, PedalID);
-            ps.setInt(2, CollectionID);
-            ps.setString(3, Title);
-            ps.setString(4, Description);
-            ps.setString(5, Model);
-            ps.setInt(6, Value);
-            ps.setString(7, DateAdded);
+            ps.setString(2, Title);
+            ps.setString(3, Description);
+            ps.setString(4, Model);
+            ps.setInt(5, Value);
+            ps.setString(6, DateAdded);
             ps.execute();
             return "{\"OK\": \"Pedal updated\"}";
         } catch (Exception exception) {

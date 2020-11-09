@@ -81,18 +81,17 @@ public class Guitar {
         System.out.println("Invoked Guitar.guitarList()");
         JSONArray response = new JSONArray();
         try {
-            PreparedStatement ps = Main.db.prepareStatement("SELECT GuitarID, CollectionID, Title, Description, Model, Colour, Value, DateAdded FROM Guitars");
+            PreparedStatement ps = Main.db.prepareStatement("SELECT GuitarID, Title, Description, Model, Colour, Value, DateAdded FROM Guitars");
             ResultSet results = ps.executeQuery();
             while (results.next() == true) {
                 JSONObject row = new JSONObject();
                 row.put("GuitarID", results.getInt(1));
-                row.put("CollectionID", results.getInt(2));
-                row.put("Title", results.getString(3));
-                row.put("Description", results.getString(4));
-                row.put("Model", results.getString(5));
-                row.put("Colour", results.getString(6));
-                row.put("Value", results.getInt(7));
-                row.put("DateAdded", results.getString(8));
+                row.put("Title", results.getString(2));
+                row.put("Description", results.getString(3));
+                row.put("Model", results.getString(4));
+                row.put("Colour", results.getString(5));
+                row.put("Value", results.getInt(6));
+                row.put("DateAdded", results.getString(7));
                 response.add(row);
             }
             return response.toString();
@@ -118,17 +117,16 @@ public class Guitar {
     }
     @POST
     @Path("add")
-    public String guitarAdd(@FormDataParam("CollectionID") Integer CollectionID, @FormDataParam("Title") String Title, @FormDataParam("Description") String Description, @FormDataParam("Model") String Model, @FormDataParam("Colour") String Colour, @FormDataParam("Value") Integer Value, @FormDataParam("DateAdded") String DateAdded) {
+    public String guitarAdd(@FormDataParam("Title") String Title, @FormDataParam("Description") String Description, @FormDataParam("Model") String Model, @FormDataParam("Colour") String Colour, @FormDataParam("Value") Integer Value, @FormDataParam("DateAdded") String DateAdded) {
         System.out.println("Invoked Amp.guitarAdd()");
         try {
-            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Guitars (CollectionID, Title, Description, Model, Colour, Value, DateAdded) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-            ps.setInt(1, CollectionID);
-            ps.setString(2, Title);
-            ps.setString(3, Description);
-            ps.setString(4, Model);
-            ps.setString(5, Colour);
-            ps.setInt(6, Value);
-            ps.setString(7, DateAdded);
+            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Guitars (Title, Description, Model, Colour, Value, DateAdded) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            ps.setString(1, Title);
+            ps.setString(2, Description);
+            ps.setString(3, Model);
+            ps.setString(4, Colour);
+            ps.setInt(5, Value);
+            ps.setString(6, DateAdded);
             ps.execute();
             return "{\"OK\": \"Added guitar.\"}";
         } catch (Exception exception) {
@@ -138,18 +136,17 @@ public class Guitar {
     }
     @POST
     @Path("update")
-    public String updateGuitar(@FormDataParam("GuitarID") Integer GuitarID, @FormDataParam("CollectionID") Integer CollectionID, @FormDataParam("Title") String Title, @FormDataParam("Description") String Description, @FormDataParam("Model") String Model, @FormDataParam("Colour") String Colour, @FormDataParam("Value") Integer Value, @FormDataParam("DateAdded") String DateAdded) {
+    public String updateGuitar(@FormDataParam("GuitarID") Integer GuitarID, @FormDataParam("Title") String Title, @FormDataParam("Description") String Description, @FormDataParam("Model") String Model, @FormDataParam("Colour") String Colour, @FormDataParam("Value") Integer Value, @FormDataParam("DateAdded") String DateAdded) {
         try {
             System.out.println("Invoked Amp.updateGuitar/update id=" + GuitarID);
-            PreparedStatement ps = Main.db.prepareStatement("UPDATE Guitars SET CollectionID = ?, Title = ?, Description = ?, Model = ?, Colour = ?, Value = ?, DateAdded = ? WHERE GuitarID = ?");
+            PreparedStatement ps = Main.db.prepareStatement("UPDATE Guitars SET Title = ?, Description = ?, Model = ?, Colour = ?, Value = ?, DateAdded = ? WHERE GuitarID = ?");
             ps.setInt(1, GuitarID);
-            ps.setInt(2, CollectionID);
-            ps.setString(3, Title);
-            ps.setString(4, Description);
-            ps.setString(5, Model);
-            ps.setString(6, Colour);
-            ps.setInt(7, Value);
-            ps.setString(8, DateAdded);
+            ps.setString(2, Title);
+            ps.setString(3, Description);
+            ps.setString(4, Model);
+            ps.setString(5, Colour);
+            ps.setInt(6, Value);
+            ps.setString(7, DateAdded);
             ps.execute();
             return "{\"OK\": \"Guitar updated\"}";
         } catch (Exception exception) {
