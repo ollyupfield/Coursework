@@ -48,13 +48,12 @@
                     if (response.hasOwnProperty("Error")) {   //checks if response from server has a key "Error"
                         alert(JSON.stringify(response));        // if it does, convert JSON object to string and alert
                     } else {
-                        alert("User Added");
+                        alert("Signup Successful, please now log in");
                         window.open("/client/Login.html", "_self");
                     }
                 });
             }
         });
-
     </script>
 
 </head>

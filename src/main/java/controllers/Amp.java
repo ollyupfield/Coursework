@@ -137,12 +137,12 @@ public class Amp {
         }
     }
     @POST
-    @Path("update")
+    @Path("update/{AmpID}")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public String updateAmp(@FormDataParam("AmpID") Integer AmpID, @FormDataParam("Title") String Title, @FormDataParam("Description") String Description, @FormDataParam("Model") String Model, @FormDataParam("Value") Integer Value, @FormDataParam("DateAdded") String DateAdded) {
+    public String updateAmp(@PathParam("AmpID") Integer AmpID, @FormDataParam("Title") String Title, @FormDataParam("Description") String Description, @FormDataParam("Model") String Model, @FormDataParam("Value") Integer Value, @FormDataParam("DateAdded") String DateAdded) {
         try {
-            System.out.println("Invoked Amp.updateAmp/update id=" + AmpID);
+            System.out.println("Invoked Amp.updateAmp");
             PreparedStatement ps = Main.db.prepareStatement("UPDATE Amps SET Title = ?, Description = ?, Model = ?, Value = ?, DateAdded = ? WHERE AmpID = ?");
             ps.setInt(1, AmpID);
             ps.setString(2, Title);

@@ -3,7 +3,7 @@
 
 <head>
 
-    <title>Edit Amp</title>
+    <title>Add an Amp</title>
 
     <style>
         body {
@@ -40,7 +40,7 @@
 <body>
 
 <div class="topnav">
-    <a class="active" href="editAmps.html">Edit Amp</a>
+    <a class="active" href="addAmp.html">Add an Amp</a>
     <a href="viewAmps.html">Back</a>
     <a style="position: relative; left: 1645px" href="Login.html">Logout</a>
 </div>
@@ -51,14 +51,13 @@
 
     "use strict";
     document.addEventListener("click", function (event) {
-        if (event.target.matches('.updateAmp')) {
-            var itemID = event.target.getAttribute("data-itemID"); //alertItemName is the class we gave all the button elements//data-itemID is an attribute we gave the button
-            console.log("Invoked updateAmp");
+        if (event.target.matches('.addAmp')) {                      //alertItemName is the class we gave all the button elements//data-itemID is an attribute we gave the button
+            console.log("Invoked addAmp");
 
-            const formData = new FormData(document.getElementById('ampUpdateForm'));
-            var url = "/amp/update/";
+            const formData = new FormData(document.getElementById('ampAddForm'));
+            var url = "/amp/add";
 
-            fetch(url + itemID, {
+            fetch(url, {
                 method: "POST",
                 body: formData,
             }).then(response => {
@@ -67,7 +66,7 @@
                 if (response.hasOwnProperty("Error")) {   //checks if response from server has a key "Error"
                     alert(JSON.stringify(response));        // if it does, convert JSON object to string and alert
                 } else {
-                    alert("Amp Updated");
+                    alert("Amp Added");
                     window.open("/client/viewAmps.html", "_self");
                 }
             });
@@ -80,9 +79,9 @@
 
 <body>
 
-<h1 style="text-align:center;font-size:300%;text-decoration-line: underline">Edit Amp:</h1>
+<h1 style="text-align:center;font-size:300%;text-decoration-line: underline">Add an Amp:</h1>
 
-<form id="ampUpdateForm">
+<form id="ampAddForm">
     <label for="Title">Title:</label><BR>
     <input type="text" name="Title" id="Title"><BR>
     <label for="Description">Description:</label><BR>
@@ -102,7 +101,7 @@
         position: relative;
         top: 50px;
     }
-    .updateAmp {
+    .addAmp {
         font-size: 20px;
         border-collapse: collapse;
         border: 3px solid #001a67;
@@ -117,7 +116,7 @@
 
 <BR>
 
-<button class='updateAmp'>Update Amp</button>
+<button class='addAmp'>Add Amp</button>
 
 </body>
 
