@@ -117,21 +117,19 @@ public class Amp {
         }
 
         @POST
-    @Path("add")
+        @Path("add")
         @Consumes(MediaType.MULTIPART_FORM_DATA)
         @Produces(MediaType.APPLICATION_JSON)
 
-        public String ampAdd(@FormDataParam("AmpID") Integer AmpID, @FormDataParam("CollectionID") Integer CollectionID, @FormDataParam("Title") String Title, @FormDataParam("Description") String Description, @FormDataParam("Model") String Model, @FormDataParam("Value") Integer Value, @FormDataParam("DateAdded") String DateAdded) {
+        public String ampAdd(@FormDataParam("Title") String Title, @FormDataParam("Description") String Description, @FormDataParam("Model") String Model, @FormDataParam("Value") Integer Value, @FormDataParam("DateAdded") String DateAdded) {
         System.out.println("Invoked Amp.ampAdd()");
         try {
-            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Amps (AmpID, CollectionID, Title, Description, Model, Value, DateAdded) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-            ps.setInt(1, AmpID);
-            ps.setInt(2, CollectionID);
-            ps.setString(3, Title);
-            ps.setString(4, Description);
-            ps.setString(5, Model);
-            ps.setInt(6, Value);
-            ps.setString(7, DateAdded);
+            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Amps (Title, Description, Model, Value, DateAdded) VALUES (?, ?, ?, ?, ?)");
+            ps.setString(1, Title);
+            ps.setString(2, Description);
+            ps.setString(3, Model);
+            ps.setInt(4, Value);
+            ps.setString(5, DateAdded);
             ps.execute();
             return "{\"OK\": \"Added amp.\"}";
         } catch (Exception exception) {

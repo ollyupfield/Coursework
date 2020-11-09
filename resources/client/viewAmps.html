@@ -118,8 +118,7 @@
                 }
             });
         }
-
-        function formatViewAmps(response){
+        function formatViewAmps(response) {
 
             let dataHTML = ""; //clear the string
 
@@ -127,18 +126,38 @@
                 dataHTML += "<tr><td>" + item.Title + "</td><td>" + item.Description + "</td><td>" + item.Model + "</td><td>" + item.Value + "</td><td>" + item.DateAdded + "</td>" + "<td> <button class='editAmp'  data-itemID='" + item.AmpID + "'>Edit</button></td>" + "<td> <button class='deleteAmp'  data-itemID='" + item.AmpID + "'>Delete</button></td></tr>";
             }
             document.getElementById("Amps").innerHTML += dataHTML;
-
+        }
             document.addEventListener("click", function (event) {
-                if (event.target.matches('.editAmp')) {                      //alertItemName is the class we gave all the button elements
+                if (event.target.matches('.editAmp')) {
                     var itemID = event.target.getAttribute("data-itemID");        //data-itemID is an attribute we gave the button
                     alert("You clicked on " + itemID);
                 }
             });
 
             document.addEventListener("click", function (event) {
-                if (event.target.matches('.deleteAmp')) {                      //alertItemName is the class we gave all the button elements
-                    var itemID = event.target.getAttribute("data-itemID");        //data-itemID is an attribute we gave the button
-                    alert("You clicked on " + itemID);
+                if (event.target.matches('.deleteAmp')) {
+                    let r = confirm("Are you sure you want to delete this amp?");
+                    if (r === true) {
+                        ampDelete();
+                    }
+                }
+            });
+        function ampDelete() {
+            console.log("Invoked ampDelete()");		//console.log your BFF for debugging client side
+
+            const ampDelete = document.getElementById("ampDelete").value;   //get value from date picker
+            const url = "/amp/delete/";		// API method on webserver will be in Eaten class with @Path of list
+
+            fetch(url + ampDelete, {        			// dateEaten as path param
+                method: "POST",
+            }).then(response => {
+                return response.json();                 //return response to JSON
+            }).then(response => {
+                if (response.hasOwnProperty("Error")) { //checks if response from server has a key "Error"
+                    alert(JSON.stringify(response));    // if it does, convert JSON object to string and alert
+                } else {
+                    console.log("Amp")          //this function will create an HTML table of the data (as we
+                    // did in lesson 2
                 }
             });
         }
