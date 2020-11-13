@@ -31,7 +31,7 @@
             border: 3px solid #001a67;
             position:absolute;
             left: 880px;
-            bottom: 725px;
+            bottom: 780px;
         }
         .editAmp {
             font-size: 20px;
@@ -207,14 +207,16 @@
             });
 
         document.addEventListener("click", function (event) {
-            if (event.target.matches('.addAmp')) {
-                window.open("addAmp.html", "_self");//alertItemName is the class we gave all the button elements//data-itemID is an attribute we gave the button
+            if (event.target.matches('.editAmp')) {
+                var itemID = event.target.getAttribute("data-itemID");
+                localStorage.setItem("ampEditID", itemID);
+                window.open("editAmps.html", "_self");
             }
         });
 
         document.addEventListener("click", function (event) {
-            if (event.target.matches('.editAmp')) {
-                window.open("editAmps.html", "_self");
+            if (event.target.matches('.addAmp')) {
+                window.open("addAmp.html", "_self");//alertItemName is the class we gave all the button elements//data-itemID is an attribute we gave the button
             }
         });
 

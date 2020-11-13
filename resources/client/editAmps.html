@@ -11,6 +11,24 @@
             font-family: Arial, Helvetica, sans-serif;
         }
 
+        table {
+            font-size: 20px;
+            border-collapse: collapse;
+            border: 2px solid black;
+            text-align:center;
+            margin-left: auto;
+            margin-right: auto;
+            position: relative;
+            top: 30px;
+        }
+        th, td {
+            border-right: 2px solid #000000;
+            padding: 8px;
+        }
+        tr:nth-child(even) {
+            background-color: #d2d2d2;
+        }
+
         .topnav {
             overflow: hidden;
             background-color: #333;
@@ -74,13 +92,51 @@
         }
     });
 
+    function viewEditAmps() {                                       	// use this method to run code when you page has loaded eg check user is logged in, add data to a table
+        console.log("Invoked viewEditAmps() ");//  your BFF for debugging!!! Don't use alerts as you'll have to remove all of them in final version
+
+        const url = "/amp/listEdit/";	// API method on webserver will be in Weight class with @Path of list
+
+        var ampEditID2 = localStorage.getItem("ampEditID")
+
+    fetch(url + ampEditID2,  {
+        method: "GET",
+    }).then(response => {
+        return response.json();                 //return response to JSON
+    }).then(response => {
+        if (response.hasOwnProperty("Error")) { //checks if response from server has a key "Error"
+        alert(JSON.stringify(response));    // if it does, convert JSON object to string and alert
+    } else {
+        formatViewAmps(response);          //this function will create an HTML table of the data
+    }
+    });
+    }
+
+    function formatViewAmps(response) {
+
+        let dataHTML = ""; //clear the string
+
+        for (let item of response) {
+            dataHTML += "<tr><td>" + item.Title + "</td><td>" + item.Description + "</td><td>" + item.Model + "</td><td>" + item.Value + "</td><td>" + item.DateAdded + "</td></tr>";
+        }
+        document.getElementById("Amps").innerHTML += dataHTML;
+    }
+
 </script>
 
 </head>
 
-<body>
-
 <h1 style="text-align:center;font-size:300%;text-decoration-line: underline">Edit Amp:</h1>
+
+<h1 style="text-align:center;font-size:20px;position: relative; top: 40px; text-decoration-line: underline">Current Details:</h1>
+
+<BR>
+
+<body onload="viewEditAmps()">
+
+<table id="Amps"></table>
+
+<h1 style="text-align:center;font-size:20px;position: relative; top: 40px; text-decoration-line: underline">Update Details:</h1>
 
 <form id="ampUpdateForm">
     <label for="Title">Title:</label><BR>

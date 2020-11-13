@@ -74,6 +74,34 @@ public class Amp {
         }
     }
     @GET
+    @Path("listEdit/{AmpID}")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String ampListEdit(@PathParam("AmpID") Integer AmpID) {
+        System.out.println("Invoked Amp.ampListEdit()");
+        JSONArray response = new JSONArray();
+        try {
+            PreparedStatement ps = Main.db.prepareStatement("SELECT AmpID, Title, Description, Model, Value, DateAdded FROM Amps WHERE AmpID = ?");
+            ps.setInt(1, AmpID);
+            ps.execute();
+            ResultSet results = ps.executeQuery();
+            while (results.next() == true) {
+                JSONObject row = new JSONObject();
+                row.put("AmpID", results.getInt(1));
+                row.put("Title", results.getString(2));
+                row.put("Description", results.getString(3));
+                row.put("Model", results.getString(4));
+                row.put("Value", results.getInt(5));
+                row.put("DateAdded", results.getString(6));
+                response.add(row);
+            }
+            return response.toString();
+        } catch (Exception exception) {
+            System.out.println("Database error: " + exception.getMessage());
+            return "{\"Error\": \"Unable to list items. Error code xx.\"}";
+        }
+    }
+    @GET
     @Path("list")
     @Produces(MediaType.APPLICATION_JSON)
     public String ampList() {
