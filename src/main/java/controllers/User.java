@@ -65,7 +65,6 @@ public class User {
         }
     }
 
-
     public static boolean validToken(String token) {
         try {
             PreparedStatement ps = Main.db.prepareStatement("SELECT UserID FROM Users WHERE SessionToken = ?");

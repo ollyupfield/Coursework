@@ -69,37 +69,41 @@
 
     "use strict";
     document.addEventListener("click", function (event) {
-        if (event.target.matches('.updateAmp')) {
-            var itemID = event.target.getAttribute("data-itemID"); //alertItemName is the class we gave all the button elements//data-itemID is an attribute we gave the button
-            console.log("Invoked updateAmp");
+        if (event.target.matches('.updateAmp')) {;
+            let r = confirm("Are you sure you want to update this amp?");
+            if (r === true) {
+                console.log("Invoked ampUpdate()"); //console.log your BFF for debugging client side
 
-            const formData = new FormData(document.getElementById('ampUpdateForm'));
-            var url = "/amp/update/";
+                const formData = new FormData(document.getElementById('ampUpdateForm'));
+                const url = "/amp/update/";		// API method on webserver will be in Eaten class with @Path of list
+                var ampUpdateID = localStorage.getItem("ampSelectedID");
 
-            fetch(url + itemID, {
-                method: "POST",
-                body: formData,
-            }).then(response => {
-                return response.json()
-            }).then(response => {
-                if (response.hasOwnProperty("Error")) {   //checks if response from server has a key "Error"
-                    alert(JSON.stringify(response));        // if it does, convert JSON object to string and alert
-                } else {
-                    alert("Amp Updated");
-                    window.open("/client/viewAmps.html", "_self");
-                }
-            });
+                fetch(url + ampUpdateID, {        			// dateEaten as path param
+                    method: "POST",
+                    body: formData,
+                }).then(response => {
+                    return response.json();                 //return response to JSON
+                }).then(response => {
+                    if (response.hasOwnProperty("Error")) { //checks if response from server has a key "Error"
+                        alert(JSON.stringify(response));    // if it does, convert JSON object to string and alert
+                    } else {
+                        alert("Amp Updated");
+                        window.open("/client/viewAmps.html", "_self");
+                    }
+                });
+            }
         }
     });
+
 
     function viewEditAmps() {                                       	// use this method to run code when you page has loaded eg check user is logged in, add data to a table
         console.log("Invoked viewEditAmps() ");//  your BFF for debugging!!! Don't use alerts as you'll have to remove all of them in final version
 
         const url = "/amp/listEdit/";	// API method on webserver will be in Weight class with @Path of list
 
-        var ampEditID2 = localStorage.getItem("ampEditID")
+        var ampEditID = localStorage.getItem("ampSelectedID");
 
-    fetch(url + ampEditID2,  {
+    fetch(url + ampEditID,  {
         method: "GET",
     }).then(response => {
         return response.json();                 //return response to JSON

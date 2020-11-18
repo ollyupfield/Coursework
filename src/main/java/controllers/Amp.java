@@ -74,6 +74,68 @@ public class Amp {
         }
     }
     @GET
+    @Path("list")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String ampList() {
+        System.out.println("Invoked Amp.ampList()");
+        JSONArray response = new JSONArray();
+        try {
+            PreparedStatement ps = Main.db.prepareStatement("SELECT AmpID, Title, Description, Model, Value, DateAdded FROM Amps");
+            ResultSet results = ps.executeQuery();
+            while (results.next() == true) {
+                JSONObject row = new JSONObject();
+                row.put("AmpID", results.getInt(1));
+                row.put("Title", results.getString(2));
+                row.put("Description", results.getString(3));
+                row.put("Model", results.getString(4));
+                row.put("Value", results.getInt(5));
+                row.put("DateAdded", results.getString(6));
+                response.add(row);
+            }
+            return response.toString();
+        } catch (Exception exception) {
+            System.out.println("Database error: " + exception.getMessage());
+            return "{\"Error\": \"Unable to list amps. Error code xx.\"}";
+        }
+    }
+        @POST
+        @Path("delete/{AmpID}")
+        @Consumes(MediaType.MULTIPART_FORM_DATA)
+        @Produces(MediaType.APPLICATION_JSON)
+        public String deleteAmp(@PathParam("AmpID") Integer AmpID) {
+            System.out.println("Invoked deleteAmp()");
+            try {
+                PreparedStatement ps = Main.db.prepareStatement("DELETE FROM Amps WHERE AmpID = ?");
+                ps.setInt(1, AmpID);
+                ps.execute();
+                return "{\"OK\": \"Amp deleted\"}";
+            } catch (Exception exception) {
+                System.out.println("Database error: " + exception.getMessage());
+                return "{\"Error\": \"Unable to delete amp, please see server console for more info.\"}";
+            }
+        }
+
+        @POST
+        @Path("add")
+        @Consumes(MediaType.MULTIPART_FORM_DATA)
+        @Produces(MediaType.APPLICATION_JSON)
+        public String ampAdd(@FormDataParam("Title") String Title, @FormDataParam("Description") String Description, @FormDataParam("Model") String Model, @FormDataParam("Value") Integer Value, @FormDataParam("DateAdded") String DateAdded) {
+        System.out.println("Invoked Amp.ampAdd()");
+        try {
+            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Amps (Title, Description, Model, Value, DateAdded) VALUES (?, ?, ?, ?, ?)");
+            ps.setString(1, Title);
+            ps.setString(2, Description);
+            ps.setString(3, Model);
+            ps.setInt(4, Value);
+            ps.setString(5, DateAdded);
+            ps.execute();
+            return "{\"OK\": \"Amp Added.\"}";
+        } catch (Exception exception) {
+            System.out.println("Database error: " + exception.getMessage());
+            return "{\"Error\": \"Unable to create new amp, please see server console for more info.\"}";
+        }
+    }
+    @GET
     @Path("listEdit/{AmpID}")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
@@ -98,70 +160,7 @@ public class Amp {
             return response.toString();
         } catch (Exception exception) {
             System.out.println("Database error: " + exception.getMessage());
-            return "{\"Error\": \"Unable to list items. Error code xx.\"}";
-        }
-    }
-    @GET
-    @Path("list")
-    @Produces(MediaType.APPLICATION_JSON)
-    public String ampList() {
-        System.out.println("Invoked Amp.ampList()");
-        JSONArray response = new JSONArray();
-        try {
-            PreparedStatement ps = Main.db.prepareStatement("SELECT AmpID, Title, Description, Model, Value, DateAdded FROM Amps");
-            ResultSet results = ps.executeQuery();
-            while (results.next() == true) {
-                JSONObject row = new JSONObject();
-                row.put("AmpID", results.getInt(1));
-                row.put("Title", results.getString(2));
-                row.put("Description", results.getString(3));
-                row.put("Model", results.getString(4));
-                row.put("Value", results.getInt(5));
-                row.put("DateAdded", results.getString(6));
-                response.add(row);
-            }
-            return response.toString();
-        } catch (Exception exception) {
-            System.out.println("Database error: " + exception.getMessage());
-            return "{\"Error\": \"Unable to list items. Error code xx.\"}";
-        }
-    }
-        @POST
-        @Path("delete/{AmpID}")
-        @Consumes(MediaType.MULTIPART_FORM_DATA)
-        @Produces(MediaType.APPLICATION_JSON)
-        public String deleteAmp(@PathParam("AmpID") Integer AmpID) {
-            System.out.println("Invoked deleteAmp()");
-            try {
-                PreparedStatement ps = Main.db.prepareStatement("DELETE FROM Amps WHERE AmpID = ?");
-                ps.setInt(1, AmpID);
-                ps.execute();
-                return "{\"OK\": \"Amp deleted\"}";
-            } catch (Exception exception) {
-                System.out.println("Database error: " + exception.getMessage());
-                return "{\"Error\": \"Unable to delete item, please see server console for more info.\"}";
-            }
-        }
-
-        @POST
-        @Path("add")
-        @Consumes(MediaType.MULTIPART_FORM_DATA)
-        @Produces(MediaType.APPLICATION_JSON)
-
-        public String ampAdd(@FormDataParam("Title") String Title, @FormDataParam("Description") String Description, @FormDataParam("Model") String Model, @FormDataParam("Value") Integer Value, @FormDataParam("DateAdded") String DateAdded) {
-        System.out.println("Invoked Amp.ampAdd()");
-        try {
-            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Amps (Title, Description, Model, Value, DateAdded) VALUES (?, ?, ?, ?, ?)");
-            ps.setString(1, Title);
-            ps.setString(2, Description);
-            ps.setString(3, Model);
-            ps.setInt(4, Value);
-            ps.setString(5, DateAdded);
-            ps.execute();
-            return "{\"OK\": \"Added amp.\"}";
-        } catch (Exception exception) {
-            System.out.println("Database error: " + exception.getMessage());
-            return "{\"Error\": \"Unable to create new item, please see server console for more info.\"}";
+            return "{\"Error\": \"Unable to list amp. Error code xx.\"}";
         }
     }
     @POST
@@ -172,17 +171,16 @@ public class Amp {
         try {
             System.out.println("Invoked Amp.updateAmp");
             PreparedStatement ps = Main.db.prepareStatement("UPDATE Amps SET Title = ?, Description = ?, Model = ?, Value = ?, DateAdded = ? WHERE AmpID = ?");
-            ps.setInt(1, AmpID);
-            ps.setString(2, Title);
-            ps.setString(3, Description);
-            ps.setString(4, Model);
-            ps.setInt(5, Value);
-            ps.setString(6, DateAdded);
+            ps.setString(1, Title);
+            ps.setString(2, Description);
+            ps.setString(3, Model);
+            ps.setInt(4, Value);
+            ps.setString(5, DateAdded);
             ps.execute();
             return "{\"OK\": \"Amp updated\"}";
         } catch (Exception exception) {
             System.out.println("Database error: " + exception.getMessage());
-            return "{\"Error\": \"Unable to update item, please see server console for more info.\"}";
+            return "{\"Error\": \"Unable to update amp, please see server console for more info.\"}";
         }
     }
 }
