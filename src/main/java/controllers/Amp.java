@@ -10,7 +10,6 @@ import javax.ws.rs.core.MediaType;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-
 @Path("amp/")
 public class Amp {
     @GET
@@ -114,7 +113,6 @@ public class Amp {
                 return "{\"Error\": \"Unable to delete amp, please see server console for more info.\"}";
             }
         }
-
         @POST
         @Path("add")
         @Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -163,19 +161,48 @@ public class Amp {
             return "{\"Error\": \"Unable to list amp. Error code xx.\"}";
         }
     }
+    @GET
+    @Path("listSearch/{searchValue}")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String ampListEdit(@PathParam("searchValue") String searchValue) {
+        System.out.println("Invoked Amp.ampListSearch()");
+        JSONArray response = new JSONArray();
+        try {
+            PreparedStatement ps = Main.db.prepareStatement("SELECT AmpID, Title, Description, Model, Value, DateAdded FROM Amps WHERE Title LIKE  ?");
+            ps.setString(1, '%' + searchValue.toLowerCase() + '%');  //% is wildcard so Title contains search value
+            ps.execute();
+            ResultSet results = ps.executeQuery();
+            while (results.next() == true) {
+                JSONObject row = new JSONObject();
+                row.put("AmpID", results.getInt(1));
+                row.put("Title", results.getString(2));
+                row.put("Description", results.getString(3));
+                row.put("Model", results.getString(4));
+                row.put("Value", results.getInt(5));
+                row.put("DateAdded", results.getString(6));
+                response.add(row);
+            }
+            return response.toString();
+        } catch (Exception exception) {
+            System.out.println("Database error: " + exception.getMessage());
+            return "{\"Error\": \"Unable to list amp. Error code xx.\"}";
+        }
+    }
     @POST
     @Path("update/{AmpID}")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
     public String updateAmp(@PathParam("AmpID") Integer AmpID, @FormDataParam("Title") String Title, @FormDataParam("Description") String Description, @FormDataParam("Model") String Model, @FormDataParam("Value") Integer Value, @FormDataParam("DateAdded") String DateAdded) {
         try {
-            System.out.println("Invoked Amp.updateAmp");
-            PreparedStatement ps = Main.db.prepareStatement("UPDATE Amps SET Title = ?, Description = ?, Model = ?, Value = ?, DateAdded = ? WHERE AmpID = ?");
-            ps.setString(1, Title);
-            ps.setString(2, Description);
-            ps.setString(3, Model);
-            ps.setInt(4, Value);
-            ps.setString(5, DateAdded);
+            System.out.println("Invoked Amp.updateAmp" + AmpID);
+            PreparedStatement ps = Main.db.prepareStatement("UPDATE Amps SET AmpID = ?, Title = ?, Description = ?, Model = ?, Value = ?, DateAdded = ? WHERE AmpID = ?");
+            ps.setInt(1, AmpID);
+            ps.setString(2, Title);
+            ps.setString(3, Description);
+            ps.setString(4, Model);
+            ps.setInt(5, Value);
+            ps.setString(6, DateAdded);
             ps.execute();
             return "{\"OK\": \"Amp updated\"}";
         } catch (Exception exception) {

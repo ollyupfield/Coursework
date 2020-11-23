@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang='en'>
-
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         table {
             font-size: 20px;
@@ -20,9 +20,7 @@
         tr:nth-child(even) {
             background-color: #d2d2d2;
         }
-    </style>
 
-    <style>
         .addAmp {
             font-size: 20px;
             background-color: #1859b7;
@@ -47,92 +45,122 @@
             border-collapse: collapse;
             border: 3px solid #001a67;
         }
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .topnav {
+            overflow: hidden;
+            background-color: #333;
+        }
+
+        .topnav a {
+            float: left;
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            font-size: 17px;
+        }
+
+        .topnav a:hover {
+            background-color: #dddddd;
+            color: black;
+        }
+
+        .topnav a.active {
+            background-color: #1859b7;
+            color: white;
+        }
+        .topnav .search-container {
+            position: absolute;
+            right: 250px;
+        }
+
+        .topnav input[type=text] {
+            padding: 6px;
+            margin-top: 8px;
+            font-size: 17px;
+            border: none;
+        }
+
+        .topnav .search-container button {
+            position: absolute;
+            left: 200px;
+            padding: 6px;
+            margin-top: 8px;
+            margin-right: 16px;
+            background: #1859b7;
+            color: #ffffff;
+            font-size: 17px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .topnav .search-container button:hover {
+            background: #cbcbcb;
+            color: #000000;
+        }
+
+        @media screen and (max-width: 600px) {
+            .topnav .search-container {
+                float: none;
+            }
+            .topnav a, .topnav input[type=text], .topnav .search-container button {
+                float: none;
+                display: block;
+                text-align: left;
+                width: 100%;
+                margin: 0;
+                padding: 14px;
+            }
+            .topnav input[type=text] {
+                border: 1px solid #ccc;
+            }
+        }
+        /* The Modal (background) */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            padding-top: 100px; /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+
+        /* Modal Content */
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding-top: 5px; /* Location of the box */
+            padding-bottom: 60px; /* Location of the box */
+            border: 1px solid #888;
+            width: 80%;
+        }
+
+        /* The Close Button */
+        .close {
+            color: #aaaaaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
     </style>
 
     <title>Amp Collection</title>
-
-<body>
-
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-    body {
-        margin: 0;
-        font-family: Arial, Helvetica, sans-serif;
-    }
-
-    .topnav {
-        overflow: hidden;
-        background-color: #333;
-    }
-
-    .topnav a {
-        float: left;
-        color: #f2f2f2;
-        text-align: center;
-        padding: 14px 16px;
-        text-decoration: none;
-        font-size: 17px;
-    }
-
-    .topnav a:hover {
-        background-color: #dddddd;
-        color: black;
-    }
-
-    .topnav a.active {
-        background-color: #1859b7;
-        color: white;
-    }
-    .topnav .search-container {
-        position: absolute;
-        right: 250px;
-    }
-
-    .topnav input[type=text] {
-        padding: 6px;
-        margin-top: 8px;
-        font-size: 17px;
-        border: none;
-    }
-
-    .topnav .search-container button {
-        position: absolute;
-        left: 200px;
-        padding: 6px;
-        margin-top: 8px;
-        margin-right: 16px;
-        background: #1859b7;
-        color: #ffffff;
-        font-size: 17px;
-        border: none;
-        cursor: pointer;
-    }
-
-    .topnav .search-container button:hover {
-        background: #cbcbcb;
-        color: #000000;
-    }
-
-    @media screen and (max-width: 600px) {
-        .topnav .search-container {
-            float: none;
-        }
-        .topnav a, .topnav input[type=text], .topnav .search-container button {
-            float: none;
-            display: block;
-            text-align: left;
-            width: 100%;
-            margin: 0;
-            padding: 14px;
-        }
-        .topnav input[type=text] {
-            border: 1px solid #ccc;
-        }
-    }
-
-</style>
-</head>
-<body>
 
 <div class="topnav">
     <a href="Dashboard.html">Dashboard</a>
@@ -140,15 +168,22 @@
     <a href="viewGuitars.html">Guitars</a>
     <a href="viewPedals.html">Pedals</a>
     <a style="position: relative; left: 1475px" href="Login.html">Logout</a>
+
     <div class="search-container">
-        <form action="/action_page.php">
-            <input type="text" placeholder="Search Collection..." name="search">
-            <button type="submit">Search</button>
+        <form>
+            <input type="text" placeholder="Search by Name..." name="search" id="search">
+            <button type="button" id='searchAmp'>Search</button>
         </form>
     </div>
 </div>
-
-</body>
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <table id="searchAmps"></table>
+        </div>
+    </div>
 
     <script>
 
@@ -179,6 +214,61 @@
                 dataHTML += "<tr><td>" + item.Title + "</td><td>" + item.Description + "</td><td>" + item.Model + "</td><td>" + item.Value + "</td><td>" + item.DateAdded + "</td>" + "<td> <button class='editAmp'  data-itemID='" + item.AmpID + "'>Edit</button></td>" + "<td> <button class='deleteAmp'  data-itemID='" + item.AmpID + "'>Delete</button></td></tr>";
             }
             document.getElementById("Amps").innerHTML += dataHTML;
+        }
+        // Get the modal
+        var modal = document.getElementById("myModal");
+
+        // Get the button that opens the modal
+        var btn = document.getElementById("searchAmp");
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+
+        // When the user clicks the button, open the modal
+        btn.onclick = function() {
+            modal.style.display = "block";
+            viewSearchedAmp();
+        }
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+            modal.style.display = "none";
+            document.getElementById("searchAmps").deleteRow(0);
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+                document.getElementById("searchAmps").deleteRow(0);
+            }
+        }
+        function viewSearchedAmp() {                                       	// use this method to run code when you page has loaded eg check user is logged in, add data to a table
+            console.log("Invoked viewSearchedAmp() ");                         //  your BFF for debugging!!! Don't use alerts as you'll have to remove all of them in final version
+
+            const url = "/amp/listSearch/";	// API method on webserver will be in Weight class with @Path of list
+            var searchValue = document.getElementById("search").value;
+
+            fetch(url + searchValue, {
+                method: "GET",
+            }).then(response => {
+                return response.json();                 //return response to JSON
+            }).then(response => {
+                if (response.hasOwnProperty("Error")) { //checks if response from server has a key "Error"
+                    alert(JSON.stringify(response));    // if it does, convert JSON object to string and alert
+                } else {
+                    formatViewSearchedAmp(response);          //this function will create an HTML table of the data
+                }
+            });
+        }
+        function formatViewSearchedAmp(response) {
+
+            let dataHTML = ""; //clear the string
+
+            for (let item of response) {
+                dataHTML += "<tr><td>" + item.Title + "</td><td>" + item.Description + "</td><td>" + item.Model + "</td><td>" + item.Value + "</td><td>" + item.DateAdded + "<td> <button class='editAmp'  data-itemID='" + item.AmpID + "'>Edit</button></td>" + "<td> <button class='deleteAmp'  data-itemID='" + item.AmpID + "'>Delete</button></td></tr>";
+            }
+            document.getElementById("searchAmps").innerHTML += dataHTML;
         }
 
             document.addEventListener("click", function (event) {
@@ -221,10 +311,6 @@
         });
 
     </script>
-
-</head>
-
-<body>
 
 <body onload="viewAmps()">
 
