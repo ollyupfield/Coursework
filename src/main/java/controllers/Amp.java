@@ -1,5 +1,6 @@
 package controllers;
 
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -7,6 +8,7 @@ import server.Main;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.io.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
@@ -196,13 +198,13 @@ public class Amp {
     public String updateAmp(@PathParam("AmpID") Integer AmpID, @FormDataParam("Title") String Title, @FormDataParam("Description") String Description, @FormDataParam("Model") String Model, @FormDataParam("Value") Integer Value, @FormDataParam("DateAdded") String DateAdded) {
         try {
             System.out.println("Invoked Amp.updateAmp" + AmpID);
-            PreparedStatement ps = Main.db.prepareStatement("UPDATE Amps SET AmpID = ?, Title = ?, Description = ?, Model = ?, Value = ?, DateAdded = ? WHERE AmpID = ?");
-            ps.setInt(1, AmpID);
-            ps.setString(2, Title);
-            ps.setString(3, Description);
-            ps.setString(4, Model);
-            ps.setInt(5, Value);
-            ps.setString(6, DateAdded);
+            PreparedStatement ps = Main.db.prepareStatement("UPDATE Amps SET Title = ?, Description = ?, Model = ?, Value = ?, DateAdded = ? WHERE AmpID = ?");
+            ps.setString(1, Title);
+            ps.setString(2, Description);
+            ps.setString(3, Model);
+            ps.setInt(4, Value);
+            ps.setString(5, DateAdded);
+            ps.setInt(6, AmpID);
             ps.execute();
             return "{\"OK\": \"Amp updated\"}";
         } catch (Exception exception) {
