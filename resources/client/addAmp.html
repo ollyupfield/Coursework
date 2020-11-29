@@ -39,7 +39,7 @@
 </head>
 <body>
 
-<div class="topnav"?
+<div class="topnav">
     <a class="active" href="addAmp.html">Add an Amp</a>
     <a href="viewAmps.html">Back</a>
     <a style="position: relative; left: 1645px" href="Login.html">Logout</a>
@@ -94,10 +94,11 @@
             if (response.startsWith('Error')) {
                 alert(response);
             } else {
-                alert("Image Added");
+                window.open("viewAmps.html", "_self");
             }
         });
-    }
+
+
 </script>
 
 </head>

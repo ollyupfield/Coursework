@@ -81,7 +81,7 @@ public class Amp {
         System.out.println("Invoked Amp.ampList()");
         JSONArray response = new JSONArray();
         try {
-            PreparedStatement ps = Main.db.prepareStatement("SELECT AmpID, Title, Description, Model, Value, DateAdded FROM Amps");
+            PreparedStatement ps = Main.db.prepareStatement("SELECT AmpID, Title, Description, Model, Value, DateAdded, ImageLink FROM Amps");
             ResultSet results = ps.executeQuery();
             while (results.next() == true) {
                 JSONObject row = new JSONObject();
@@ -91,6 +91,7 @@ public class Amp {
                 row.put("Model", results.getString(4));
                 row.put("Value", results.getInt(5));
                 row.put("DateAdded", results.getString(6));
+                row.put("ImageLink", results.getString(7));
                 response.add(row);
             }
             return response.toString();
@@ -212,4 +213,5 @@ public class Amp {
             return "{\"Error\": \"Unable to update amp, please see server console for more info.\"}";
         }
     }
+
 }
