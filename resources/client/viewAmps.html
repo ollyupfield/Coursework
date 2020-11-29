@@ -212,7 +212,7 @@
             let dataHTML = ""; //clear the string
 
             for (let item of response) {
-                dataHTML += "<tr><td>" + item.Title + "</td><td>" + item.Description + "</td><td>" + item.Model + "</td><td>" + item.Value + "</td><td>" + item.DateAdded + "</td>" + "<td> <button class='editAmp'  data-itemID='" + item.AmpID + "'>Edit</button></td>" + "<td> <button class='deleteAmp'  data-itemID='" + item.AmpID + "'>Delete</button></td></tr>";
+                dataHTML += "<tr><td>" + item.Title + "</td><td>" + item.Description + "</td><td>" + item.Model + "</td><td>" + item.Value + "</td><td>" + item.DateAdded + "</td><td>" + item.ImageLink + "</td>" + "<td> <button class='editAmp'  data-itemID='" + item.AmpID + "'>Edit</button></td>" + "<td> <button class='deleteAmp'  data-itemID='" + item.AmpID + "'>Delete</button></td></tr>";
             }
             document.getElementById("Amps").innerHTML += dataHTML;
         }
