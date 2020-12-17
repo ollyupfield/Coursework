@@ -76,27 +76,7 @@
         }
     });
 
-    function uploadImage() {
-        console.log("invoked uploadImage()");
-        var fileInput = document.getElementById('the-file');
-        var file = fileInput.files[0];
-        var formData = new FormData();
-        formData.append('file', file);
-
-        const url = "/amp/image";
-
-        fetch(url, {
-            method: "POST",
-            body: formData,
-        }).then(response => {
-            return response.text()          //method returns a promise, have to return from here to get text
-        }).then(response => {
-            if (response.startsWith('Error')) {
-                alert(response);
-            } else {
-                window.open("viewAmps.html", "_self");
-            }
-        });
+    
 
 
 </script>
@@ -118,9 +98,7 @@
     <input type="text" name="Value" id="Value"><BR>
     <label for="DateAdded">Date Added(YYYY.DD.MM):</label><BR>
     <input type="text" name="DateAdded" id="DateAdded"><BR>
-    <input id="the-file" name="file" type="file">
-    <BR>
-    <button id="uploadImage" class="button" onclick='uploadImage();' >UPLOAD IMAGE</button>
+
 </form>
 
 <style>

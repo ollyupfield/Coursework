@@ -167,7 +167,7 @@
     <a class="active" href="viewAmps.html">Amps</a>
     <a href="viewGuitars.html">Guitars</a>
     <a href="viewPedals.html">Pedals</a>
-    <a style="position: relative; left: 1475px" href="Login.html">Logout</a>
+    <a class = "logout" style="position: relative; left: 1475px" href="Login.html">Logout</a>
 
     <div class="search-container">
         <form>
@@ -310,6 +310,31 @@
         document.addEventListener("click", function (event) {
             if (event.target.matches('.addAmp')) {
                 window.open("addAmp.html", "_self");//alertItemName is the class we gave all the button elements//data-itemID is an attribute we gave the button
+            }
+        });
+
+        document.addEventListener("click", function (event) {
+            if (event.target.matches('.logout')) {;
+                var UserID = event.target.getAttribute("data-itemID");
+                let r = confirm("Are you sure you want to logout?");
+                if (r === true) {
+                    console.log("Invoked logout()"); //console.log your BFF for debugging client side
+
+                    const url = "/user/logout/";		// API method on webserver will be in Eaten class with @Path of list
+
+                    fetch(url + UserID, {        			// dateEaten as path param
+                        method: "GET",
+                    }).then(response => {
+                        return response.json();                 //return response to JSON
+                    }).then(response => {
+                        if (response.hasOwnProperty("Error")) { //checks if response from server has a key "Error"
+                            alert(JSON.stringify(response));    // if it does, convert JSON object to string and alert
+                        } else {
+                            alert("Logout Successful");
+                            window.open("/client/Login.html", "_self");
+                        }
+                    });
+                }
             }
         });
     </script>

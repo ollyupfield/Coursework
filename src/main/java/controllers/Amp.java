@@ -134,8 +134,8 @@ public class Amp {
         } catch (Exception exception) {
             System.out.println("Database error: " + exception.getMessage());
             return "{\"Error\": \"Unable to create new amp, please see server console for more info.\"}";
+            }
         }
-    }
     @GET
     @Path("listEdit/{AmpID}")
     @Consumes(MediaType.MULTIPART_FORM_DATA)

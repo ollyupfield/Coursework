@@ -63,19 +63,19 @@
 
     "use strict";
 
-    function ampsTotal() {                                       	// use this method to run code when you page has loaded eg check user is logged in, add data to a table
-        console.log("ampsTotal() ");                         //  your BFF for debugging!!! Don't use alerts as you'll have to remove all of them in final version
+    function ampsTotal() {
+        console.log("ampsTotal() ");
 
-        const url = "/amp/total/";	// API method on webserver will be in Weight class with @Path of list
+        const url = "/amp/total/";
         fetch(url, {
             method: "GET",
         }).then(response => {
-            return response.json();                 //return response to JSON
+            return response.json();
         }).then(response => {
-            if (response.hasOwnProperty("Error")) { //checks if response from server has a key "Error"
-                alert(JSON.stringify(response));    // if it does, convert JSON object to string and alert
+            if (response.hasOwnProperty("Error")) {
+                alert(JSON.stringify(response));
             } else {
-                formatAmpsTotal(response); //this function will create an HTML table of the data
+                formatAmpsTotal(response);
             }
         });
     }
@@ -113,19 +113,19 @@
         });
     }
 
-    function ampsLatest() {                                       	// use this method to run code when you page has loaded eg check user is logged in, add data to a table
-        console.log("ampsLatest() ");                         //  your BFF for debugging!!! Don't use alerts as you'll have to remove all of them in final version
+    function ampsLatest() {
+        console.log("ampsLatest() ");
 
-        const url = "/amp/latest/";	// API method on webserver will be in Weight class with @Path of list
+        const url = "/amp/latest/";
         fetch(url, {
             method: "GET",
         }).then(response => {
-            return response.json();                 //return response to JSON
+            return response.json();
         }).then(response => {
-            if (response.hasOwnProperty("Error")) { //checks if response from server has a key "Error"
-                alert(JSON.stringify(response));    // if it does, convert JSON object to string and alert
+            if (response.hasOwnProperty("Error")) {
+                alert(JSON.stringify(response));
             } else {
-                formatAmpsLatest(response); //this function will create an HTML table of the data
+                formatAmpsLatest(response);
             }
         });
     }

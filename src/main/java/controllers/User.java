@@ -76,4 +76,20 @@ public class User {
             return false;
         }
     }
+    @POST
+    @Path("logout/{UserID}")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String deleteAmp(@PathParam("UserID") Integer UserID) {
+        System.out.println("Invoked logout()");
+        try {
+            PreparedStatement ps = Main.db.prepareStatement("DELETE SessionToken FROM Users WHERE UserID = ?");
+            ps.setInt(1, UserID);
+            ps.execute();
+            return "{\"OK\": \"SessionToken deleted\"}";
+        } catch (Exception exception) {
+            System.out.println("Database error: " + exception.getMessage());
+            return "{\"Error\": \"Unable to logout, please see server console for more info.\"}";
+        }
+    }
 }
