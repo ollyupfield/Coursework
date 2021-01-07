@@ -3,61 +3,76 @@
 
 <head>
     <title>Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="/js/js.cookie.min.js"></script>
+    <link rel="stylesheet" href="/client/css/General.css">
 </head>
-
-<body>
 
 <style>
-    body {
-        margin: 0;
-        font-family: Arial, Helvetica, sans-serif;
+    html, body {
+        max-width: 100%;
+        overflow-x: hidden;
+        overflow-y: hidden;
+    }
+    th, td {
+        border-right: 2px solid #000000;
+        padding: 8px;
     }
 
-    .topnav {
-        overflow: hidden;
-        background-color: #333;
+    tr:nth-child(even) {
+        background-color: #d2d2d2;
     }
-
-    .topnav a {
-        float: left;
-        color: #f2f2f2;
-        text-align: center;
-        padding: 14px 16px;
-        text-decoration: none;
-        font-size: 17px;
+    #Totals {
+        font-size: 30px;
+        border-collapse: collapse;
+        border: 2px solid #000000;
+        position: relative;
+        left: 320px;
+        top: 45px;
     }
-
-    .topnav a:hover {
-        background-color: #ddd;
-        color: black;
+    #Values {
+        font-size: 30px;
+        border-collapse: collapse;
+        border: 2px solid #000000;
+        position: relative;
+        top: -400px;
+        left: 650px;
     }
-
-    .topnav a.active {
-        background-color: #1859b7;
-        color: white;
+    #Latest {
+        font-size: 30px;
+        border-collapse: collapse;
+        border: 2px solid #000000;
+        position: relative;
+        top: -160px;
+        left: 1000px;
+    }
+    #Users {
+        font-size: 15px;
+        text-decoration: underline;
+        border-collapse: collapse;
+        border: 2px solid #ffffff;
+        position: relative;
+        top: -860px;
+        left: 1402px;
     }
 </style>
-
-</head>
-<body>
 
 <div class="topnav">
     <a class="active" href="Dashboard.html">Dashboard</a>
     <a href="viewAmps.html">Amps</a>
     <a href="viewGuitars.html">Guitars</a>
     <a href="viewPedals.html">Pedals</a>
-    <a style="position: relative; left: 1475px" href="Login.html">Logout</a>
+    <a style="float: right;" href="User.html">User</a>
+    <button id="logout" onclick='logout();'>Logout</button>
 </div>
 
-</body>
-
-<h1 style="font-size:300%;text-align:center;text-decoration-line: underline">Dashboard:</h1>
+<h1 style="font-size:300%;text-align:center;text-decoration-line: underline">Dashboard</h1>
 
 <BR>
 
-<h1 style="font-size:150%;position: relative;left: 500px;text-decoration-line: underline">Total Item Count:</h1>
-<h1 style="font-size:150%;position: relative;left: 1200px;top: -42px;text-decoration-line: underline">Recently Added:</h1>
-<h1 style="font-size:150%;position: relative;left: 850px;top: -89px;text-decoration-line: underline">Collection Value:</h1>
+<h1 style="font-size:150%;position: relative;left: 300px;text-decoration-line: underline">Total Item Count</h1>
+<h1 style="font-size:150%;position: relative;left: 1100px;top: -42px;text-decoration-line: underline">Recently Added</h1>
+<h1 style="font-size:150%;position: relative;left: 670px;top: -89px;text-decoration-line: underline">Collection Value</h1>
 
 <script>
 
@@ -249,7 +264,7 @@
         let dataHTML = ""; //clear the string
 
         for (let item of response) {
-            dataHTML += "<tr><td>" + "Amps - " + item.Title + "</tr></td>";
+            dataHTML += "<tr><td>" + "Amps - " + item.Title + "</td>" + "<td><img src='img/" + item.ImageLink + "'></td>" + "</tr>";
         }
         document.getElementById("Latest").innerHTML += dataHTML;
     }
@@ -259,7 +274,7 @@
         let dataHTML = ""; //clear the string
 
         for (let item of response) {
-            dataHTML += "<tr><td>" + "Guitars - " + item.Title + "</tr></td>";
+            dataHTML += "<tr><td>" + "Guitars - " + item.Title + "</td>" + "<td><img src='img/" + item.ImageLink + "'></td>" + "</tr>";
         }
         document.getElementById("Latest").innerHTML += dataHTML;
     }
@@ -269,7 +284,7 @@
         let dataHTML = ""; //clear the string
 
         for (let item of response) {
-            dataHTML += "<tr><td>" + "Pedals - " + item.Title + "</tr></td>";
+            dataHTML += "<tr><td>" + "Pedals - " + item.Title + "</td>" + "<td><img src='img/" + item.ImageLink + "'></td>" + "</tr>";
         }
         document.getElementById("Latest").innerHTML += dataHTML;
     }
@@ -316,45 +331,61 @@
         guitarsValue();
         pedalsValue();
     }
+    function logout(){
+        let r = confirm("Are you sure you want to logout");
+        if (r === true) {
+            console.log("Invoked ampDelete()"); //console.log your BFF for debugging client side
 
+            const url = "/user/logout/";
+
+            fetch(url, {        			// dateEaten as path param
+                method: "POST",
+            }).then(response => {
+                return response.json();                 //return response to JSON
+            }).then(response => {
+                if (response.hasOwnProperty("Error")) { //checks if response from server has a key "Error"
+                    alert(JSON.stringify(response));    // if it does, convert JSON object to string and alert
+                } else {
+                    alert("Logout Successful");
+                    window.open("/client/Login.html", "_self");
+                }
+            });
+        }
+    }
+    function viewUsers() {                                       	// use this method to run code when you page has loaded eg check user is logged in, add data to a table
+        console.log("Invoked viewUsers() ");                         //  your BFF for debugging!!! Don't use alerts as you'll have to remove all of them in final version
+
+        const url = "/user/list/";	// API method on webserver will be in Weight class with @Path of list
+
+        fetch(url, {
+            method: "GET",
+        }).then(response => {
+            return response.json();                 //return response to JSON
+        }).then(response => {
+            if (response.hasOwnProperty("Error")) { //checks if response from server has a key "Error"
+                alert(JSON.stringify(response));    // if it does, convert JSON object to string and alert
+            } else {
+                formatViewName(response);          //this function will create an HTML table of the data
+            }
+        });
+    }
+    function formatViewName(response) {
+
+        let dataHTML = ""; //clear the string
+
+        for (let item of response) {
+            dataHTML += "<tr><td>" + "Signed In As - " + item.Name + "</td></tr>";
+        }
+        document.getElementById("Users").innerHTML += dataHTML;
+    }
 </script>
 
-</head>
-
-<body>
-
-<body onload="pageLoad()">
+<body onload="pageLoad(); viewUsers();">
 
 <table id="Totals"></table>
 <table id="Latest"></table>
 <table id="Values"></table>
-
-<style>
-    #Totals {
-        font-size: 30px;
-        border-collapse: collapse;
-        border: 4px solid #1859b7;
-        position: relative;
-        left: 520px;
-    }
-    #Values {
-        font-size: 30px;
-        border-collapse: collapse;
-        border: 4px solid #1859b7;
-        position: relative;
-        top: -230px;
-        left: 840px;
-    }
-    #Latest {
-        font-size: 30px;
-        border-collapse: collapse;
-        border: 4px solid #1859b7;
-        position: relative;
-        top: -110px;
-        left: 1200px;
-    }
-</style>
+<table id="Users"></table>
 
 </body>
-
 </html>

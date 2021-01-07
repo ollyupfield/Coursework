@@ -2,30 +2,16 @@
 <html lang='en'>
 
 <head>
-    <title>Edit Amp</title>
+    <title>Add a Pedal</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="/js/js.cookie.min.js"></script>
     <link rel="stylesheet" href="/client/css/General.css">
 </head>
+<body>
 
     <style>
-        table {
-            font-size: 15px;
-            border-collapse: collapse;
-            border: 2px solid black;
-            text-align:center;
-            margin-left: auto;
-            margin-right: auto;
+        input[id=outputFile] {
             position: relative;
-            top: 30px;
-            width: 80%;
-        }
-        th, td {
-            border-right: 2px solid #000000;
-            padding: 8px;
-        }
-        tr:nth-child(even) {
-            background-color: #d2d2d2;
         }
         form {
             text-align: center;
@@ -33,10 +19,7 @@
             position: relative;
             top: 50px;
         }
-        input[id=outputFile] {
-            position: relative;
-        }
-        #updateAmp {
+        #addPedal {
             font-size: 20px;
             border-collapse: collapse;
             border: 3px solid #001a67;
@@ -50,15 +33,15 @@
     </style>
 
 <div class="topnav">
-    <a class="active" href="editAmps.html">Edit Amp</a>
-    <a href="viewAmps.html">Back</a>
+    <a class="active" href="addPedal.html">Add a Pedal</a>
+    <a href="viewPedals.html">Back</a>
 </div>
 
 <script>
 
     "use strict";
     function validateForm() {
-        console.log("Invoked editAmps.validateForm");
+        console.log("Invoked addPedal.validateForm");
         let valid = true;
 
         document.getElementById("titleValidationText").innerHTML = "";
@@ -93,71 +76,40 @@
         }
 
         if (valid === true) {
-            updateAmp();
+            addPedal();
         }
     }
-    function updateAmp() {
-            let r = confirm("Are you sure you want to update this amp?");
+    function addPedal() {                    //alertItemName is the class we gave all the button elements//data-itemID is an attribute we gave the button
+            let r = confirm("Are you sure you want to add this pedal?");
             if (r === true) {
-                console.log("Invoked ampUpdate()"); //console.log your BFF for debugging client side
+                console.log("Invoked addPedal");
 
-                const formData = new FormData(document.getElementById('ampUpdateForm'));
-                const url = "/amp/update/";		// API method on webserver will be in Eaten class with @Path of list
-                var ampUpdateID = localStorage.getItem("ampSelectedID");
+                const formData = new FormData(document.getElementById('pedalAddForm'));
+                var url = "/pedal/add";
 
-                fetch(url + ampUpdateID, {        			// dateEaten as path param
+                fetch(url, {
                     method: "POST",
                     body: formData,
                 }).then(response => {
-                    return response.json();                 //return response to JSON
+                    return response.json()
                 }).then(response => {
-                    if (response.hasOwnProperty("Error")) { //checks if response from server has a key "Error"
-                        alert(JSON.stringify(response));    // if it does, convert JSON object to string and alert
+                    if (response.hasOwnProperty("Error")) {   //checks if response from server has a key "Error"
+                        alert(JSON.stringify(response));        // if it does, convert JSON object to string and alert
                     } else {
-                        alert("Amp Updated");
-                        window.open("/client/viewAmps.html", "_self");
+                        alert("Pedal Added");
+                        window.open("/client/viewPedals.html", "_self");
                     }
                 });
             }
         }
-
-    function viewEditAmps() {                                       	// use this method to run code when you page has loaded eg check user is logged in, add data to a table
-        console.log("Invoked viewEditAmps() ");//  your BFF for debugging!!! Don't use alerts as you'll have to remove all of them in final version
-
-        const url = "/amp/listEdit/";	// API method on webserver will be in Weight class with @Path of list
-
-        var ampEditID = localStorage.getItem("ampSelectedID");
-
-    fetch(url + ampEditID,  {
-        method: "GET",
-    }).then(response => {
-        return response.json();                 //return response to JSON
-    }).then(response => {
-        if (response.hasOwnProperty("Error")) { //checks if response from server has a key "Error"
-        alert(JSON.stringify(response));    // if it does, convert JSON object to string and alert
-    } else {
-        formatViewAmps(response);          //this function will create an HTML table of the data
-    }
-    });
-    }
-
-    function formatViewAmps(response) {
-
-        let dataHTML = ""; //clear the string
-
-        for (let item of response) {
-            dataHTML += "<tr><td>" + item.Title + "</td><td>" + item.Description + "</td><td>" + item.Model + "</td><td>" + item.Value + "</td><td>" + item.DateAdded + "</td>" + "<td><img src='img/" + item.ImageLink + "'></td>" + "</tr>";
-        }
-        document.getElementById("Amps").innerHTML += dataHTML;
-    }
     function uploadImage() {
-        console.log("invoked editAmps.uploadImage()");
+        console.log("invoked addPedal.uploadImage()");
         var fileInput = document.getElementById('thefile');
         var file = fileInput.files[0];
         var formData = new FormData();
         formData.append('file', file);
 
-        const url = "/amp/image";
+        const url = "/pedal/image";
 
         fetch(url, {
             method: "POST",
@@ -168,7 +120,7 @@
             if (response.startsWith('Error')) {
                 alert(response);
             } else {
-                window.open("viewAmps.html", "_self");
+                window.open("viewPedals.html", "_self");
             }
         });
     }
@@ -181,28 +133,18 @@
     }
 </script>
 
-<h1 style="text-align:center;font-size:300%;text-decoration-line: underline">Edit Amp</h1>
+<h1 style="text-align:center;font-size:300%;text-decoration-line: underline">Add a Pedal</h1>
 
-<h1 style="text-align:center;font-size:20px;position: relative; top: 40px; text-decoration-line: underline">Current Details</h1>
-
-<BR>
-
-<body onload="viewEditAmps()">
-
-<table id="Amps"></table>
-
-<h1 style="text-align:center;font-size:20px;position: relative; top: 40px; text-decoration-line: underline">Update Details</h1>
-
-<form id="ampUpdateForm">
+<form id="pedalAddForm">
     <input type="text" id="Title" name="Title" class="form-control" placeholder="Title" required autofocus>
     <div id="titleValidationText"></div>
     <input type="text" id="Description" name="Description" class="form-control" placeholder="Description" required autofocus>
     <div id="descriptionValidationText"></div>
     <input type="text" id="Model" name="Model" class="form-control" placeholder="Model" required autofocus>
     <div id="modelValidationText"></div>
-    <input type="text" id="Value" name="Value" class="form-control" placeholder="Value (&#163;)" required autofocus>
+    <input type="text" id="Value" name="Value" class="form-control" placeholder="Value(&#163;)" required autofocus>
     <div id="valueValidationText"></div>
-    <input type="text" id="DateAdded" name="DateAdded" class="form-control" placeholder="Date Added (Y.M.D)" required autofocus>
+    <input type="text" id="DateAdded" name="DateAdded" class="form-control" placeholder="Date Added" required autofocus>
     <div id="dateAddedValidationText"></div>
     <input id="thefile" name="file" type="file" onchange='getOutput();'><BR>
     <input id='outputFile' type='text' name='outputFile'>
@@ -210,7 +152,7 @@
 
 <BR>
 
-<button id="updateAmp" onclick='validateForm(); uploadImage();'>Update Amp</button>
+<button id='addPedal' onclick='validateForm(); uploadImage();'>Add Pedal</button>
 
 </body>
 </html>

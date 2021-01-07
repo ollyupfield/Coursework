@@ -1,10 +1,16 @@
 <!DOCTYPE html>
 <html lang='en'>
+
 <head>
+    <title>Amp Collection</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="/js/js.cookie.min.js"></script>
+    <link rel="stylesheet" href="/client/css/General.css">
+</head>
+
     <style>
         table {
-            font-size: 20px;
+            font-size: 15px;
             border-collapse: collapse;
             border: 2px solid black;
             text-align:center;
@@ -12,6 +18,7 @@
             margin-right: auto;
             position: relative;
             top: 30px;
+            width: 80%;
         }
         th, td {
             border-right: 2px solid #000000;
@@ -20,154 +27,45 @@
         tr:nth-child(even) {
             background-color: #d2d2d2;
         }
-
-        .addAmp {
+        #addAmp {
             font-size: 20px;
             background-color: #1859b7;
             color: white;
             border-collapse: collapse;
             border: 3px solid #001a67;
             position:absolute;
-            left: 880px;
-            bottom: 780px;
+            left: 46%;
+            bottom: 75%;
         }
-        .editAmp {
+        #editAmp {
             font-size: 20px;
             background-color: #1859b7;
             color: white;
             border-collapse: collapse;
             border: 3px solid #001a67;
         }
-        .deleteAmp {
+        #deleteAmp {
             font-size: 20px;
             background-color: #1859b7;
             color: white;
             border-collapse: collapse;
             border: 3px solid #001a67;
         }
-        body {
-            margin: 0;
-            font-family: Arial, Helvetica, sans-serif;
-        }
-
-        .topnav {
-            overflow: hidden;
-            background-color: #333;
-        }
-
-        .topnav a {
-            float: left;
-            color: #f2f2f2;
-            text-align: center;
-            padding: 14px 16px;
-            text-decoration: none;
-            font-size: 17px;
-        }
-
-        .topnav a:hover {
-            background-color: #dddddd;
-            color: black;
-        }
-
-        .topnav a.active {
-            background-color: #1859b7;
-            color: white;
-        }
-        .topnav .search-container {
-            position: absolute;
-            right: 250px;
-        }
-
         .topnav input[type=text] {
             padding: 6px;
             margin-top: 8px;
             font-size: 17px;
             border: none;
         }
-
-        .topnav .search-container button {
-            position: absolute;
-            left: 200px;
-            padding: 6px;
-            margin-top: 8px;
-            margin-right: 16px;
-            background: #1859b7;
-            color: #ffffff;
-            font-size: 17px;
-            border: none;
-            cursor: pointer;
-        }
-
-        .topnav .search-container button:hover {
-            background: #cbcbcb;
-            color: #000000;
-        }
-
-        @media screen and (max-width: 600px) {
-            .topnav .search-container {
-                float: none;
-            }
-            .topnav a, .topnav input[type=text], .topnav .search-container button {
-                float: none;
-                display: block;
-                text-align: left;
-                width: 100%;
-                margin: 0;
-                padding: 14px;
-            }
-            .topnav input[type=text] {
-                border: 1px solid #ccc;
-            }
-        }
-        /* The Modal (background) */
-        .modal {
-            display: none; /* Hidden by default */
-            position: fixed; /* Stay in place */
-            z-index: 1; /* Sit on top */
-            padding-top: 100px; /* Location of the box */
-            left: 0;
-            top: 0;
-            width: 100%; /* Full width */
-            height: 100%; /* Full height */
-            overflow: auto; /* Enable scroll if needed */
-            background-color: rgb(0,0,0); /* Fallback color */
-            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-        }
-
-        /* Modal Content */
-        .modal-content {
-            background-color: #fefefe;
-            margin: auto;
-            padding-top: 5px; /* Location of the box */
-            padding-bottom: 60px; /* Location of the box */
-            border: 1px solid #888;
-            width: 80%;
-        }
-
-        /* The Close Button */
-        .close {
-            color: #aaaaaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: #000;
-            text-decoration: none;
-            cursor: pointer;
-        }
     </style>
-
-    <title>Amp Collection</title>
 
 <div class="topnav">
     <a href="Dashboard.html">Dashboard</a>
     <a class="active" href="viewAmps.html">Amps</a>
     <a href="viewGuitars.html">Guitars</a>
     <a href="viewPedals.html">Pedals</a>
-    <a class = "logout" style="position: relative; left: 1475px" href="Login.html">Logout</a>
+    <a style="float: right;" href="User.html">User</a>
+    <button id="logout" onclick='logout();'>Logout</button>
 
     <div class="search-container">
         <form>
@@ -177,14 +75,12 @@
     </div>
 </div>
     <!-- The Modal -->
-    <div id="myModal" class="modal">
-        <!-- Modal content -->
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <table id="searchAmps"></table>
-        </div>
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <table id="searchAmps"></table>
     </div>
-
+</div>
 
     <script>
 
@@ -212,7 +108,7 @@
             let dataHTML = ""; //clear the string
 
             for (let item of response) {
-                dataHTML += "<tr><td>" + item.Title + "</td><td>" + item.Description + "</td><td>" + item.Model + "</td><td>" + item.Value + "</td><td>" + item.DateAdded + "</td><td>" + item.ImageLink + "</td>" + "<td> <button class='editAmp'  data-itemID='" + item.AmpID + "'>Edit</button></td>" + "<td> <button class='deleteAmp'  data-itemID='" + item.AmpID + "'>Delete</button></td></tr>";
+                dataHTML += "<tr><td>" + item.Title + "</td><td>" + item.Description + "</td><td>" + item.Model + "</td><td>" + item.Value + "</td><td>" + item.DateAdded + "</td>" + "<td><img src='img/" + item.ImageLink + "'></td>" + "<td> <button id='editAmp'  data-itemID='" + item.AmpID + "'>Edit</button></td>" + "<td> <button id='deleteAmp'  data-itemID='" + item.AmpID + "'>Delete</button></td></tr>";
             }
             document.getElementById("Amps").innerHTML += dataHTML;
         }
@@ -269,13 +165,13 @@
             let dataHTML = ""; //clear the string
 
             for (let item of response) {
-                dataHTML += "<tr><td>" + item.Title + "</td><td>" + item.Description + "</td><td>" + item.Model + "</td><td>" + item.Value + "</td><td>" + item.DateAdded + "</td><td>" + item.ImageLink + "</td>" + "<td> <button class='editAmp'  data-itemID='" + item.AmpID + "'>Edit</button></td>" + "<td> <button class='deleteAmp'  data-itemID='" + item.AmpID + "'>Delete</button></td></tr>";
+                dataHTML += "<tr><td>" + item.Title + "</td><td>" + item.Description + "</td><td>" + item.Model + "</td><td>" + item.Value + "</td><td>" + item.DateAdded + "</td>" + "<td><img src='img/" + item.ImageLink + "'></td>" + "<td> <button id='editAmp'  data-itemID='" + item.AmpID + "'>Edit</button></td>" + "<td> <button id='deleteAmp'  data-itemID='" + item.AmpID + "'>Delete</button></td></tr>";
             }
             document.getElementById("searchAmps").innerHTML += dataHTML;
         }
 
             document.addEventListener("click", function (event) {
-                if (event.target.matches('.deleteAmp')) {;
+                if (event.target.matches('#deleteAmp')) {;
                     var itemID = event.target.getAttribute("data-itemID");
                     let r = confirm("Are you sure you want to delete this amp?");
                     if (r === true) {
@@ -300,7 +196,7 @@
             });
 
         document.addEventListener("click", function (event) {
-            if (event.target.matches('.editAmp')) {
+            if (event.target.matches('#editAmp')) {
                 var itemID = event.target.getAttribute("data-itemID");
                 localStorage.setItem("ampSelectedID", itemID);
                 window.open("editAmps.html", "_self");
@@ -308,51 +204,46 @@
         });
 
         document.addEventListener("click", function (event) {
-            if (event.target.matches('.addAmp')) {
+            if (event.target.matches('#addAmp')) {
                 window.open("addAmp.html", "_self");//alertItemName is the class we gave all the button elements//data-itemID is an attribute we gave the button
             }
         });
+        function logout(){
+            let r = confirm("Are you sure you want to logout?");
+            if (r === true) {
+                console.log("Invoked ampDelete()"); //console.log your BFF for debugging client side
 
-        document.addEventListener("click", function (event) {
-            if (event.target.matches('.logout')) {;
-                var UserID = event.target.getAttribute("data-itemID");
-                let r = confirm("Are you sure you want to logout?");
-                if (r === true) {
-                    console.log("Invoked logout()"); //console.log your BFF for debugging client side
+                const url = "/user/logout/";
 
-                    const url = "/user/logout/";		// API method on webserver will be in Eaten class with @Path of list
-
-                    fetch(url + UserID, {        			// dateEaten as path param
-                        method: "GET",
-                    }).then(response => {
-                        return response.json();                 //return response to JSON
-                    }).then(response => {
-                        if (response.hasOwnProperty("Error")) { //checks if response from server has a key "Error"
-                            alert(JSON.stringify(response));    // if it does, convert JSON object to string and alert
-                        } else {
-                            alert("Logout Successful");
-                            window.open("/client/Login.html", "_self");
-                        }
-                    });
+                        fetch(url, {        			// dateEaten as path param
+                            method: "POST",
+                        }).then(response => {
+                            return response.json();                 //return response to JSON
+                        }).then(response => {
+                            if (response.hasOwnProperty("Error")) { //checks if response from server has a key "Error"
+                                alert(JSON.stringify(response));    // if it does, convert JSON object to string and alert
+                            } else {
+                                alert("Logout Successful");
+                                window.open("/client/Login.html", "_self");
+                            }
+                        });
+                    }
                 }
-            }
-        });
     </script>
 
-<body onload="viewAmps()">
+<body onload="viewAmps();">
 
-<h1 style="text-align:center;font-size:300%;text-decoration-line: underline">Amp Collection:</h1>
+<h1 style="text-align:center;font-size:300%;text-decoration-line: underline">Amp Collection</h1>
 
-<h1 style="text-align:center;font-size:20px;position: relative; top: 40px;left: -50px;">Name &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Description&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Model&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&pound; Value Date Added</h1>
+<h1 style="text-align:center;font-size:20px;position: relative; top: 40px;left: -75px;">Name &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Description&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Model&nbsp;&nbsp;&nbsp;&pound; &nbsp;&nbsp;&nbsp;Date Added Image</h1>
 
 <table id="Amps"></table>
 
 <BR>
 
-<button class='addAmp'>Add an Amp</button>
+<button id='addAmp'>Add an Amp</button>
 
 <BR>
 
 </body>
-
 </html>

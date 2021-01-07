@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+    <title>Edit User</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="/js/js.cookie.min.js"></script>
+    <link rel="stylesheet" href="/client/css/General.css">
+</head>
+
+    <style>
+        table {
+            font-size: 15px;
+            border-collapse: collapse;
+            border: 2px solid black;
+            text-align:center;
+            margin-left: auto;
+            margin-right: auto;
+            position: relative;
+            top: 30px;
+            width: 40%;
+        }
+        th, td {
+            border-right: 2px solid #000000;
+            padding: 8px;
+        }
+        form {
+            text-align: center;
+            font-size: 20px;
+            position: relative;
+            top: 50px;
+        }
+        #updateUser {
+            font-size: 20px;
+            border-collapse: collapse;
+            border: 3px solid #001a67;
+            background-color: #1859b7;
+            color: white;
+            margin: auto;
+            display: block;
+            position: relative;
+            top: 100px;
+        }
+    </style>
+
+<div class="topnav">
+    <a class="active" href="editUser.html">Edit User</a>
+    <a href="User.html">Back</a>
+</div>
+
+<script>
+
+    "use strict";
+    function validateForm() {
+        console.log("Invoked editUser.validateForm");
+        let valid = true;
+
+        document.getElementById("nameValidationText").innerHTML = "";
+        document.getElementById("emailValidationText").innerHTML = "";  //clear these so if form validated again, messages are gone
+        document.getElementById("passwordValidationText").innerHTML = "";
+        document.getElementById("password1ValidationText").innerHTML = "";
+
+        if (document.getElementById("Name").value === "") {
+            document.getElementById("nameValidationText").innerHTML = "Enter a valid Name";
+            valid = false;
+        }
+
+        if (document.getElementById("Email").value === "") {
+            document.getElementById("emailValidationText").innerHTML = "Enter a valid Email";
+            valid = false;
+        }
+
+        if (!document.getElementById("Password").checkValidity()) {
+            document.getElementById("passwordValidationText").innerHTML = "Password length must be 8 - 30 characters";
+            valid = false;
+        }
+
+        if (!document.getElementById("Password1").checkValidity()) {
+            document.getElementById("password1ValidationText").innerHTML = "Password length must be 8 - 30 characters";
+            valid = false;
+        }
+
+        if (document.getElementById("Password").value !== document.getElementById("Password1").value) {
+            document.getElementById("password1ValidationText").innerHTML = "Passwords do not match";
+            valid = false;
+        }
+
+        if (valid === true) {
+            updateUser();
+        }
+    }
+    function updateUser() {
+        let r = confirm("Are you sure you want to update your account details?");
+        if (r === true) {
+            console.log("Invoked userUpdate()"); //console.log your BFF for debugging client side
+
+            const formData = new FormData(document.getElementById('userUpdateForm'));
+            const url = "/user/update/";		// API method on webserver will be in Eaten class with @Path of list
+
+            fetch(url, {        			// dateEaten as path param
+                method: "POST",
+                body: formData,
+            }).then(response => {
+                return response.json();                 //return response to JSON
+            }).then(response => {
+                if (response.hasOwnProperty("Error")) { //checks if response from server has a key "Error"
+                    alert(JSON.stringify(response));    // if it does, convert JSON object to string and alert
+                } else {
+                    alert("User Details Updated");
+                    window.open("/client/User.html", "_self");
+                }
+            });
+        }
+    }
+
+    function viewUsers() {                                       	// use this method to run code when you page has loaded eg check user is logged in, add data to a table
+        console.log("Invoked viewUsers() ");                         //  your BFF for debugging!!! Don't use alerts as you'll have to remove all of them in final version
+
+        const url = "/user/list/";	// API method on webserver will be in Weight class with @Path of list
+
+        fetch(url, {
+            method: "GET",
+        }).then(response => {
+            return response.json();                 //return response to JSON
+        }).then(response => {
+            if (response.hasOwnProperty("Error")) { //checks if response from server has a key "Error"
+                alert(JSON.stringify(response));    // if it does, convert JSON object to string and alert
+            } else {
+                formatViewUsers(response);          //this function will create an HTML table of the data
+            }
+        });
+    }
+
+    function formatViewUsers(response) {
+
+        let dataHTML = ""; //clear the string
+
+        for (let item of response) {
+            dataHTML += "<tr><td>" + item.Name + "</td><td>" + item.Email + "</td><td>" + item.Password + "</td></tr>";
+        }
+        document.getElementById("Users").innerHTML += dataHTML;
+    }
+
+</script>
+
+<h1 style="text-align:center;font-size:300%;text-decoration-line: underline">Edit User</h1>
+
+<h1 style="text-align:center;font-size:20px;position: relative; top: 40px; text-decoration-line: underline">Current Details</h1>
+
+<BR>
+
+<body onload="viewUsers()">
+
+<table id="Users"></table>
+
+<h1 style="text-align:center;font-size:20px;position: relative; top: 40px; text-decoration-line: underline">Update Details</h1>
+
+<form id="userUpdateForm">
+    <input type="text" id="Name" name="Name" class="form-control" placeholder="Name" required autofocus>
+    <div id="nameValidationText"></div>
+    <input type="email" pattern="^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$" required class="form-control" id="Email" name="Email" placeholder="Email">
+    <div id="emailValidationText"></div>
+    <input type="password" id="Password" name="Password" class="form-control" placeholder="Password" pattern=".{8,30}" required>
+    <div id="passwordValidationText"></div>
+    <input type="password" id="Password1" name="Password1" class="form-control" placeholder="Re-enter Password" pattern=".{8,30}" required>
+    <div id="password1ValidationText"></div>
+</form>
+
+<BR>
+
+<button id="updateUser" onclick='validateForm();'>Update User</button>
+
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+    <title>User</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="/js/js.cookie.min.js"></script>
+    <link rel="stylesheet" href="/client/css/General.css">
+</head>
+
+    <style>
+        table {
+            font-size: 15px;
+            border-collapse: collapse;
+            border: 2px solid black;
+            text-align:center;
+            margin-left: auto;
+            margin-right: auto;
+            position: relative;
+            top: 30px;
+            width: 40%;
+        }
+        th, td {
+            border-right: 2px solid #000000;
+            padding: 8px;
+        }
+        tr:nth-child(even) {
+            background-color: #d2d2d2;
+        }
+        #editUser {
+            font-size: 20px;
+            background-color: #1859b7;
+            color: white;
+            border-collapse: collapse;
+            border: 3px solid #001a67;
+        }
+        #deleteUser {
+            font-size: 20px;
+            background-color: #1859b7;
+            color: white;
+            border-collapse: collapse;
+            border: 3px solid #001a67;
+        }
+        .topnav input[type=text] {
+            padding: 6px;
+            margin-top: 8px;
+            font-size: 17px;
+            border: none;
+        }
+        .topnav input[type=text] {
+            border: 1px solid #ccc;
+        }
+    </style>
+
+    <div class="topnav">
+        <a href="Dashboard.html">Dashboard</a>
+        <a href="viewAmps.html">Amps</a>
+        <a href="viewGuitars.html">Guitars</a>
+        <a href="viewPedals.html">Pedals</a>
+        <a style="float: right; "class="active" href="User.html">User</a>
+        <button class="logout" onclick='logout();'>Logout</button>
+    </div>
+
+    <script>
+
+        "use strict";
+
+        function viewUsers() {                                       	// use this method to run code when you page has loaded eg check user is logged in, add data to a table
+            console.log("Invoked viewUsers() ");                         //  your BFF for debugging!!! Don't use alerts as you'll have to remove all of them in final version
+
+            const url = "/user/list/";	// API method on webserver will be in Weight class with @Path of list
+
+            fetch(url, {
+                method: "GET",
+            }).then(response => {
+                return response.json();                 //return response to JSON
+            }).then(response => {
+                if (response.hasOwnProperty("Error")) { //checks if response from server has a key "Error"
+                    alert(JSON.stringify(response));    // if it does, convert JSON object to string and alert
+                } else {
+                    formatViewUsers(response);          //this function will create an HTML table of the data
+                }
+            });
+        }
+        function formatViewUsers(response) {
+
+            let dataHTML = ""; //clear the string
+
+            for (let item of response) {
+                dataHTML += "<tr><td>" + item.Name + "</td><td>" + item.Email + "</td><td>" + item.Password + "</td>" + "<td> <button id='editUser'  data-itemID='" + item.UserID + "'>Edit</button></td>" + "<td> <button id='deleteUser'  data-itemID='" + item.UserID + "'>Delete</button></td></tr>";
+            }
+            document.getElementById("Users").innerHTML += dataHTML;
+        }
+
+        document.addEventListener("click", function (event) {
+            if (event.target.matches('#deleteUser')) {;
+                let r = confirm("Are you sure you want to delete your account? This cannot be undone");
+                if (r === true) {
+                    console.log("Invoked ampDelete()"); //console.log your BFF for debugging client side
+
+                    const url = "/user/delete/";
+
+                    fetch(url, {        			// dateEaten as path param
+                        method: "POST",
+                    }).then(response => {
+                        return response.json();                 //return response to JSON
+                    }).then(response => {
+                        if (response.hasOwnProperty("Error")) { //checks if response from server has a key "Error"
+                            alert(JSON.stringify(response));    // if it does, convert JSON object to string and alert
+                        } else {
+                            alert("Account Deleted");
+                            window.open("/client/Login.html", "_self");
+                        }
+                    });
+                }
+            }
+        });
+
+        document.addEventListener("click", function (event) {
+            if (event.target.matches('#editUser')) {
+                var itemID = event.target.getAttribute("data-itemID");
+                localStorage.setItem("userSelectedID", itemID);
+                window.open("editUser.html", "_self");
+            }
+        });
+
+        function logout(){
+            let r = confirm("Are you sure you want to logout");
+            if (r === true) {
+                console.log("Invoked ampDelete()"); //console.log your BFF for debugging client side
+
+                const url = "/user/logout/";
+
+                fetch(url, {        			// dateEaten as path param
+                    method: "POST",
+                }).then(response => {
+                    return response.json();                 //return response to JSON
+                }).then(response => {
+                    if (response.hasOwnProperty("Error")) { //checks if response from server has a key "Error"
+                        alert(JSON.stringify(response));    // if it does, convert JSON object to string and alert
+                    } else {
+                        alert("Logout Successful");
+                        window.open("/client/Login.html", "_self");
+                    }
+                });
+            }
+        }
+    </script>
+
+<body onload="viewUsers();">
+
+<h1 style="text-align:center;font-size:300%;text-decoration-line: underline">User</h1>
+
+<h1 style="text-align:center;font-size:20px;position: relative; top: 40px;left: -120px;">Name &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Email&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Password</h1>
+
+<table id="Users"></table>
+
+<BR>
+
+</body>
+</html>

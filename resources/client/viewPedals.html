@@ -2,22 +2,91 @@
 <html lang='en'>
 
 <head>
+    <title>Pedal Collection</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="/js/js.cookie.min.js"></script>
+    <link rel="stylesheet" href="/client/css/General.css">
+</head>
 
     <style>
         table {
+            font-size: 15px;
             border-collapse: collapse;
-            border: 1px solid black;
+            border: 2px solid black;
+            text-align:center;
+            margin-left: auto;
+            margin-right: auto;
+            position: relative;
+            top: 30px;
+            width: 80%;
+        }
+        th, td {
+            border-right: 2px solid #000000;
+            padding: 8px;
+        }
+        tr:nth-child(even) {
+            background-color: #d2d2d2;
+        }
+        #addPedal {
+            font-size: 20px;
+            background-color: #1859b7;
+            color: white;
+            border-collapse: collapse;
+            border: 3px solid #001a67;
+            position:absolute;
+            left: 46%;
+            bottom: 75%;
+        }
+        #editPedal {
+            font-size: 20px;
+            background-color: #1859b7;
+            color: white;
+            border-collapse: collapse;
+            border: 3px solid #001a67;
+        }
+        #deletePedal {
+            font-size: 20px;
+            background-color: #1859b7;
+            color: white;
+            border-collapse: collapse;
+            border: 3px solid #001a67;
+        }
+        .topnav input[type=text] {
+            padding: 6px;
+            margin-top: 8px;
+            font-size: 17px;
+            border: none;
         }
     </style>
 
-    <title>Amps</title>
+    <div class="topnav">
+        <a href="Dashboard.html">Dashboard</a>
+        <a href="viewAmps.html">Amps</a>
+        <a href="viewGuitars.html">Guitars</a>
+        <a class="active" href="viewPedals.html">Pedals</a>
+        <a style="float: right;" href="User.html">User</a>
+        <button id="logout" onclick='logout();'>Logout</button>
+
+        <div class="search-container">
+            <form>
+                <input type="text" placeholder="Search by Name..." name="search" id="search">
+                <button type="button" id='searchPedal'>Search</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <table id="searchPedals"></table>
+        </div>
+    </div>
 
     <script>
 
         "use strict";
-
-        function pageLoad() {                                       	// use this method to run code when you page has loaded eg check user is logged in, add data to a table
-            console.log("Invoked pageLoad() ");                         //  your BFF for debugging!!! Don't use alerts as you'll have to remove all of them in final version
+        function viewPedals() {                                       	// use this method to run code when you page has loaded eg check user is logged in, add data to a table
+            console.log("Invoked viewPedals() ");                         //  your BFF for debugging!!! Don't use alerts as you'll have to remove all of them in final version
 
             const url = "/pedal/list/";	// API method on webserver will be in Weight class with @Path of list
 
@@ -29,50 +98,151 @@
                 if (response.hasOwnProperty("Error")) { //checks if response from server has a key "Error"
                     alert(JSON.stringify(response));    // if it does, convert JSON object to string and alert
                 } else {
-                    formatPedals(response);          //this function will create an HTML table of the data
+                    formatViewPedals(response);          //this function will create an HTML table of the data
                 }
             });
         }
-        function formatPedals(response){
+        function formatViewPedals(response) {
 
+            let dataHTML = ""; //clear the string
 
-            let dataHTML = "";
-
-
-            //clear the string
-            for (let item of response) {                            //creates a table with rows for every item in JSON array and a button - how cool?  Very
-                dataHTML += "<tr><td>" + item.Title + "</td><td>" + item.Description + item.Model + "</td><td>" + item.Make + "</td><td>" + item.DateAdded + "</td><td> <button class='alertPedalID'  data-itemID='" + item.PedalID + "'>Click Me</button></td></tr>";
+            for (let item of response) {
+                dataHTML += "<tr><td>" + item.Title + "</td><td>" + item.Description + "</td><td>" + item.Model + "</td><td>" + item.Value + "</td><td>" + item.DateAdded + "</td>" + "<td><img src='img/" + item.ImageLink + "'></td>" + "<td> <button id='editPedal'  data-itemID='" + item.PedalID + "'>Edit</button></td>" + "<td> <button id='deletePedal'  data-itemID='" + item.PedalID + "'>Delete</button></td></tr>";
             }
             document.getElementById("Pedals").innerHTML += dataHTML;
+        }
+        // Get the modal
+        var modal = document.getElementById("myModal");
 
-            document.addEventListener("click", function (event) {
-                if (event.target.matches('.alertPedalID')) {                      //alertItemName is the class we gave all the button elements
-                    var itemID = event.target.getAttribute("data-itemID");        //data-itemID is an attribute we gave the button
-                    alert("You clicked on " + itemID);
-                }
-            });
+        // Get the button that opens the modal
+        var btn = document.getElementById("searchPedal");
 
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+
+        // When the user clicks the button, open the modal
+        btn.onclick = function() {
+            modal.style.display = "block";
+            viewSearchedPedal();
         }
 
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+            modal.style.display = "none";
+            var Table = document.getElementById("searchPedals");
+            Table.innerHTML = "";
+        }
 
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+                var Table = document.getElementById("searchPedals");
+                Table.innerHTML = "";
+            }
+        }
+        function viewSearchedPedal() {                                       	// use this method to run code when you page has loaded eg check user is logged in, add data to a table
+            console.log("Invoked viewSearchedPedal() ");                         //  your BFF for debugging!!! Don't use alerts as you'll have to remove all of them in final version
 
+            const url = "/pedal/listSearch/";	// API method on webserver will be in Weight class with @Path of list
+            var searchValue = document.getElementById("search").value;
+
+            fetch(url + searchValue, {
+                method: "GET",
+            }).then(response => {
+                return response.json();                 //return response to JSON
+            }).then(response => {
+                if (response.hasOwnProperty("Error")) { //checks if response from server has a key "Error"
+                    alert(JSON.stringify(response));    // if it does, convert JSON object to string and alert
+                } else {
+                    formatViewSearchedPedal(response);          //this function will create an HTML table of the data
+                }
+            });
+        }
+        function formatViewSearchedPedal(response) {
+
+            let dataHTML = ""; //clear the string
+
+            for (let item of response) {
+                dataHTML += "<tr><td>" + item.Title + "</td><td>" + item.Description + "</td><td>" + item.Model + "</td><td>" + item.Value + "</td><td>" + item.DateAdded + "</td>" + "<td><img src='img/" + item.ImageLink + "'></td>" + "<td> <button id='editPedal'  data-itemID='" + item.PedalID + "'>Edit</button></td>" + "<td> <button id='deletePedal'  data-itemID='" + item.PedalID + "'>Delete</button></td></tr>";
+            }
+            document.getElementById("searchPedals").innerHTML += dataHTML;
+        }
+
+        document.addEventListener("click", function (event) {
+            if (event.target.matches('#deletePedal')) {;
+                var itemID = event.target.getAttribute("data-itemID");
+                let r = confirm("Are you sure you want to delete this pedal?");
+                if (r === true) {
+                    console.log("Invoked pedalDelete()"); //console.log your BFF for debugging client side
+
+                    const url = "/pedal/delete/";		// API method on webserver will be in Eaten class with @Path of list
+
+                    fetch(url + itemID, {        			// dateEaten as path param
+                        method: "POST",
+                    }).then(response => {
+                        return response.json();                 //return response to JSON
+                    }).then(response => {
+                        if (response.hasOwnProperty("Error")) { //checks if response from server has a key "Error"
+                            alert(JSON.stringify(response));    // if it does, convert JSON object to string and alert
+                        } else {
+                            alert("Pedal Deleted");
+                            window.open("/client/viewPedals.html", "_self");
+                        }
+                    });
+                }
+            }
+        });
+
+        document.addEventListener("click", function (event) {
+            if (event.target.matches('#editPedal')) {
+                var itemID = event.target.getAttribute("data-itemID");
+                localStorage.setItem("pedalSelectedID", itemID);
+                window.open("editPedals.html", "_self");
+            }
+        });
+
+        document.addEventListener("click", function (event) {
+            if (event.target.matches('#addPedal')) {
+                window.open("addPedal.html", "_self");//alertItemName is the class we gave all the button elements//data-itemID is an attribute we gave the button
+            }
+        });
+        function logout(){
+            let r = confirm("Are you sure you want to logout?");
+            if (r === true) {
+                console.log("Invoked ampDelete()"); //console.log your BFF for debugging client side
+
+                const url = "/user/logout/";
+
+                fetch(url, {        			// dateEaten as path param
+                    method: "POST",
+                }).then(response => {
+                    return response.json();                 //return response to JSON
+                }).then(response => {
+                    if (response.hasOwnProperty("Error")) { //checks if response from server has a key "Error"
+                        alert(JSON.stringify(response));    // if it does, convert JSON object to string and alert
+                    } else {
+                        alert("Logout Successful");
+                        window.open("/client/Login.html", "_self");
+                    }
+                });
+            }
+        }
     </script>
 
+<body onload="viewPedals()">
 
-</head>
+<h1 style="text-align:center;font-size:300%;text-decoration-line: underline">Pedal Collection</h1>
 
-<body>
+<h1 style="text-align:center;font-size:20px;position: relative; top: 40px;left: -75px;">Name &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Description&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Model&nbsp;&nbsp;&nbsp;&pound; &nbsp;&nbsp;&nbsp;Date Added Image</h1>
 
-<body onload="pageLoad()">
-
-Pedal Collection:
-
-
-<BR>
-<BR>
 <table id="Pedals"></table>
 
+<BR>
+
+<button id='addPedal'>Add a Pedal</button>
+
+<BR>
 
 </body>
-
 </html>

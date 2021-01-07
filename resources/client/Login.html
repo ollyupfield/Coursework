@@ -1,10 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
     <title>Login</title>
+    <meta charset="UTF-8">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="/js/js.cookie.min.js"></script>
+    <link rel="stylesheet" href="/client/css/General.css">
+</head>
+<body>
+
+<style>
+    #login {
+        font-size: 20px;
+        background-color: #1859b7;
+        color: white;
+        border-collapse: collapse;
+        border: 3px solid #001a67;
+        position: relative;
+        left: 555px;
+    }
+    #signup {
+        font-size: 20px;
+        background-color: #1859b7;
+        color: white;
+        border-collapse: collapse;
+        border: 3px solid #001a67;
+        position: relative;
+        left: 875px;
+        top: -32px;
+    }
+    #signupForm {
+        position: relative;
+        left: 850px;
+        top: -25px;
+        font-size: 20px;
+    }
+    #loginForm {
+        position: relative;
+        left: 520px;
+        top: 143px;
+        font-size: 20px;
+    }
+    html, body {
+          max-width: 100%;
+          overflow-x: hidden;
+    }
+</style>
+
     <script>
+
+        "use strict";
         function postUserLogin() {
             console.log("Invoked postUserLogin() ");
 
@@ -16,24 +63,79 @@
                 body: formData,
             }).then(response => {
                 return response.json();                 //now return that promise to JSON
-        }).then(response => {
+            }).then(response => {
                 if (response.hasOwnProperty("Error")) {
-                alert(JSON.stringify(response));        // if it does, convert JSON object to string and alert
-            } else {
-                Cookies.set("token", response.SessionToken);
-                Cookies.set("email", response.Email);
-                window.open("Dashboard.html", "_self");       //open index.html in same tab
-            }
-        });
+                    alert(JSON.stringify(response));        // if it does, convert JSON object to string and alert
+                } else {
+                    Cookies.set("sessionToken", response.sessionToken);
+                    window.open("Dashboard.html", "_self");       //open index.html in same tab
+                }
+            });
         }
-    </script>
+        function validateForm() {
+            console.log("Invoked login.validateForm");
+            let valid = true;
 
-    <script>
+            document.getElementById("emailValidationText").innerHTML = "";
+            document.getElementById("passwordValidationText").innerHTML = "";  //clear these so if form validated again, messages are gone
 
-        "use strict";
-        document.addEventListener("click", function (event) {
-            if (event.target.matches('.signup')) {                      //alertItemName is the class we gave all the button elements//data-itemID is an attribute we gave the button
-                console.log("Invoked signup");
+            if (document.getElementById("email").value === "") {
+                document.getElementById("emailValidationText").innerHTML = "Enter a valid email";
+                valid = false;
+            }
+
+            if (!document.getElementById("password").checkValidity()) {
+                document.getElementById("passwordValidationText").innerHTML = "Password length must be 8 - 30 characters";
+                valid = false;
+            }
+
+            if (valid === true) {
+                postUserLogin();
+            }
+        }
+        function validateSignupForm() {
+            console.log("Invoked login.validateSignupForm");
+            let valid = true;
+
+            document.getElementById("nameValidationText").innerHTML = "";
+            document.getElementById("email1ValidationText").innerHTML = "";
+            document.getElementById("password1ValidationText").innerHTML = "";
+            document.getElementById("password2ValidationText").innerHTML = "";  //clear these so if form validated again, messages are gone
+
+            if (document.getElementById("name").value === "") {
+                document.getElementById("nameValidationText").innerHTML = "Enter your name";
+                valid = false;
+            }
+
+            if (document.getElementById("email1").value === "") {
+                document.getElementById("email1ValidationText").innerHTML = "Enter a valid email";
+                valid = false;
+            }
+
+            if (!document.getElementById("password1").checkValidity()) {
+                document.getElementById("password1ValidationText").innerHTML = "Password length must be 8 - 30 characters";
+                valid = false;
+            }
+
+            if (!document.getElementById("password2").checkValidity()) {
+                document.getElementById("password2ValidationText").innerHTML = "Password length must be 8 - 30 characters";
+                valid = false;
+            }
+
+            if (document.getElementById("password1").value !== document.getElementById("password2").value) {
+                document.getElementById("password2ValidationText").innerHTML = "Passwords do not match";
+                valid = false;
+            }
+
+            if (valid === true) {
+                signup();
+            }
+        }
+
+        function signup() {                 //alertItemName is the class we gave all the button elements//data-itemID is an attribute we gave the button
+            let r = confirm("Are you sure you want to sign up with these account details?");
+            if (r === true) {
+                console.log("Invoked user.signup");
 
                 const formData = new FormData(document.getElementById('signupForm'));
                 var url = "/user/signup";
@@ -52,81 +154,40 @@
                     }
                 });
             }
-        });
+        }
     </script>
 
-</head>
-<body>
-<style>
-    body {
-        margin: 0;
-        font-family: Arial, Helvetica, sans-serif;
-    }
-</style>
+<h1 style="font-size:300%;text-align:center;text-decoration-line: underline;position: relative;top: 60px">Guitar Collection Management</h1>
 
-<h1 style="font-size:300%;text-align:center;text-decoration-line: underline;position: relative;top: 60px">Login:</h1>
-
-<form class="loginForm">
-    <label for="email" style="font-size:120%;text-align:center;text-decoration-line: underline">Existing Users:</label><BR>
+<form id="loginForm">
+    <label for="email" style="font-size:120%;text-align:center;text-decoration-line: underline;position: relative; left: 12px">Sign In:</label><BR>
     <BR>
-    <label for="email">Email:</label><BR>
-    <input type="text" name="email" id="email"><BR>
-    <label for="password">Password:</label><BR>
-    <input type="password" name="password" id="password"><BR>
+    <input type="text" id="email" name="email" class="form-control" placeholder="Email" required autofocus>
+    <div id="emailValidationText"></div>
+    <input type="password" id="password" name="password" class="form-control" placeholder="Password" pattern=".{8,30}" required>
+    <div id="passwordValidationText"></div>
 </form>
 
 <form id="signupForm">
-    <label for="signupEmail" style="font-size:120%;text-align:center;text-decoration-line: underline;position: relative; left: 12px">New Users:</label><BR>
+    <label for="name" style="font-size:120%;text-align:center;text-decoration-line: underline;position: relative; left: 12px">Sign Up:</label><BR>
     <BR>
-    <label for="signupEmail">Email:</label><BR>
-    <input type="text" name="signupEmail" id="signupEmail"><BR>
-    <label for="signupPassword">Password:</label><BR>
-    <input type="password" name="signupPassword" id="signupPassword"><BR>
-    <label for="Name">Name:</label><BR>
-    <input type="text" name="Name" id="Name"><BR>
+    <input type="text" id="name" name="name" class="form-control" placeholder="Name" required autofocus>
+    <div id="nameValidationText"></div>
+    <input type="email" pattern="^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$" required class="form-control" id="email1" name="email1" placeholder="Email">
+    <div id="email1ValidationText"></div>
+    <input type="password" id="password1" name="password1" class="form-control" placeholder="Password" pattern=".{8,30}" required>
+    <div id="password1ValidationText"></div>
+    <input type="password" id="password2" name="password2" class="form-control" placeholder="Password" pattern=".{8,30}" required>
+    <div id="password2ValidationText"></div>
 </form>
 
 <BR>
 
-<button class="login" onclick='postUserLogin();'>LOGIN</button>
+<button id="login" onclick='validateForm();'>LOGIN</button>
 
 <BR>
 
-<button class='signup'>SIGN UP</button>
-
-<style>
-    .login {
-        font-size: 20px;
-        background-color: #1859b7;
-        color: white;
-        border-collapse: collapse;
-        border: 3px solid #001a67;
-        position: relative;
-        left: 755px;
-    }
-    .signup {
-        font-size: 20px;
-        background-color: #1859b7;
-        color: white;
-        border-collapse: collapse;
-        border: 3px solid #001a67;
-        position: relative;
-        left: 1075px;
-        top: -32px;
-    }
-    #signupForm {
-        position: relative;
-        left: 1050px;
-        top: -25px;
-        font-size: 20px;
-    }
-    .loginForm {
-        position: relative;
-        left: 720px;
-        top: 143px;
-        font-size: 20px;
-    }
-</style>
+<button id="signup" onclick='validateSignupForm();'>SIGN UP</button>
 
 </body>
 </html>
