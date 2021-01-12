@@ -277,8 +277,8 @@ public class Pedal {
             ps.setInt(4, Value);
             ps.setString(5, DateAdded);
             ps.setString(6, ImageLink);
-            ps.setInt(7, PedalID);
-            ps.setInt(8, userID);
+            ps.setInt(7, userID);
+            ps.setInt(8, PedalID);
             ps.execute();
             return "{\"OK\": \"Pedal Updated\"}";
         } catch (Exception exception) {

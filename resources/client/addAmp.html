@@ -38,7 +38,6 @@
 </div>
 
 <script>
-
     "use strict";
     function validateForm() {
         console.log("Invoked addAmp.validateForm");
@@ -120,7 +119,7 @@
             if (response.startsWith('Error')) {
                 alert(response);
             } else {
-                window.open("viewAmps.html", "_self");
+
             }
         });
     }
@@ -132,7 +131,6 @@
     function getOutput() {
         outputFile.value = getFile(thefile.value);
     }
-
 </script>
 
 <h1 style="text-align:center;font-size:300%;text-decoration-line: underline">Add an Amp</h1>

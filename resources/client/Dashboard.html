@@ -369,15 +369,7 @@
             }
         });
     }
-    function formatViewName(response) {
 
-        let dataHTML = ""; //clear the string
-
-        for (let item of response) {
-            dataHTML += "<tr><td>" + "Signed In As - " + item.Name + "</td></tr>";
-        }
-        document.getElementById("Users").innerHTML += dataHTML;
-    }
 </script>
 
 <body onload="pageLoad(); viewUsers();">

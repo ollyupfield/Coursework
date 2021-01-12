@@ -281,8 +281,8 @@ public class Guitar {
             ps.setInt(5, Value);
             ps.setString(6, DateAdded);
             ps.setString(7, ImageLink);
-            ps.setInt(8, GuitarID);
-            ps.setInt(9, userID);
+            ps.setInt(8, userID);
+            ps.setInt(9, GuitarID);
             ps.execute();
             return "{\"OK\": \"Guitar Updated\"}";
         } catch (Exception exception) {
