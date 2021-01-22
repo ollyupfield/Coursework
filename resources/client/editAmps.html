@@ -114,6 +114,7 @@
                     if (response.hasOwnProperty("Error")) { //checks if response from server has a key "Error"
                         alert(JSON.stringify(response));    // if it does, convert JSON object to string and alert
                     } else {
+                        uploadImage();
                         alert("Amp Updated");
                         window.open("/client/viewAmps.html", "_self");
                     }
@@ -210,7 +211,7 @@
 
 <BR>
 
-<button id="updateAmp" onclick='validateForm(); uploadImage();'>Update Amp</button>
+<button id="updateAmp" onclick='validateForm();'>Update Amp</button>
 
 </body>
 </html>

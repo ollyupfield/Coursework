@@ -72,11 +72,6 @@
                 }
             });
         }
-        function logout() {
-            console.log("logout - remove cookies and redirect to login page");
-            Cookies.remove("sessionToken");
-            window.location.href = "login.html";
-        }
         function validateForm() {
             console.log("Invoked login.validateForm");
             let valid = true;
@@ -107,6 +102,10 @@
             document.getElementById("password1ValidationText").innerHTML = "";
             document.getElementById("password2ValidationText").innerHTML = "";  //clear these so if form validated again, messages are gone
 
+            if (document.getElementById("name").value === "") {
+                document.getElementById("nameValidationText").innerHTML = "Enter a valid name";
+                valid = false;
+            }
 
             if (document.getElementById("email1").value === "") {
                 document.getElementById("email1ValidationText").innerHTML = "Enter a valid email";
